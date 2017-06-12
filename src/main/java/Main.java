@@ -63,7 +63,7 @@ public class Main {
         System.out.println(jf.getCustomerName());
 
         System.out.println("delete embassy");
-        custDAO.delete(framb.getCustomerId());
+        custDAO.delete(jf.getCustomerId());
 
 
         System.out.println("create Developers");
@@ -163,9 +163,9 @@ public class Main {
 
         System.out.println("adding projects to clients");
         // add projects to clients
-        custDAO.addProjectToCustomer(paysystem.getProjectId(),vk.getId());
-        custDAO.addProjectToCustomer(sitedev.getProjectId(),webdev.getId());
-        custDAO.addProjectToCustomer(tool.getProjectId(),ibm.getId());
+        custDAO.addProjectToCustomer(paysystem.getProjectId(),framb.getCustomerId());
+        custDAO.addProjectToCustomer(sitedev.getProjectId(),osmoun.getCustomerId());
+        custDAO.addProjectToCustomer(tool.getProjectId(),claude.getCustomerId());
 
         // add developers to companies
         System.out.println("adding developers to companies");
@@ -185,34 +185,32 @@ public class Main {
        DAOProjectsImpl prDAO = new DAOProjectsImpl();
        DAOSkillsImpl skDAO = new DAOSkillsImpl();
 
-       Company test = new Company("test", "test","test");
-       compDAO.create(test);
+         compDAO.delete(13);
+         compDAO.delete(14);
+         compDAO.delete(15);
+         compDAO.delete(16);
+         compDAO.delete(17);
+         compDAO.delete(18);
 
-         compDAO.delete(9);
-         compDAO.delete(10);
-         compDAO.delete(11);
-         compDAO.delete(12);
+         devDAO.delete(13);
+         devDAO.delete(14);
+         devDAO.delete(15);
+         devDAO.delete(16);
 
+         custDAO.delete(13);
+         custDAO.delete(14);
+         custDAO.delete(15);
+         //custDAO.delete(12);
 
-         devDAO.delete(9);
-         devDAO.delete(10);
-         devDAO.delete(11);
-         devDAO.delete(12);
+         prDAO.delete(13);
+         prDAO.delete(14);
+         prDAO.delete(15);
+         prDAO.delete(16);
 
-         custDAO.delete(9);
-         custDAO.delete(10);
-         custDAO.delete(11);
-         custDAO.delete(12);
-
-         prDAO.delete(9);
-         prDAO.delete(10);
-         prDAO.delete(11);
-         prDAO.delete(12);
-
-         skDAO.delete(9);
-         skDAO.delete(10);
-         skDAO.delete(11);
-         skDAO.delete(12);*/
+         skDAO.delete(13);
+         skDAO.delete(14);
+         skDAO.delete(15);
+         skDAO.delete(16);*/
 
 
     }
