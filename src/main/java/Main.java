@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("Check if database exists, if not create it");
+       System.out.println("Check if database exists, if not create it");
 
        if (!Utils.checkDBExists("homework11")) {
            try {
@@ -37,12 +37,12 @@ public class Main {
         compDAO.create(vk);
 
         System.out.println("update and read facebook");
-        compDAO.update(2, vk);
-        facebook = compDAO.read(2);
+        compDAO.update(facebook.getId(), vk);
+        facebook = compDAO.read(facebook.getId());
         System.out.println(facebook.getCompanyName());
 
         System.out.println("delete duplicate vk");
-        compDAO.delete(2);
+        compDAO.delete(facebook.getId());
 
         System.out.println("create Customers");
         Customer claude = new Customer("Claude", "Paris, France", "+33145000000", "French consultant");
@@ -58,12 +58,12 @@ public class Main {
         custDAO.create(framb);
 
         System.out.println("Update JF in db and in memory");
-        custDAO.update(2,framb);
-        jf = custDAO.read(2);
+        custDAO.update(jf.getCustomerId(),framb);
+        jf = custDAO.read(jf.getCustomerId());
         System.out.println(jf.getCustomerName());
 
         System.out.println("delete embassy");
-        custDAO.delete(4);
+        custDAO.delete(framb.getCustomerId());
 
 
         System.out.println("create Developers");
@@ -85,12 +85,12 @@ public class Main {
         devDAO.create(igor);
 
         System.out.println("Update charles in db and in memory");
-        devDAO.update(3,guillaume);
-        charles = devDAO.read(3);
+        devDAO.update(charles.getDeveloperId(),guillaume);
+        charles = devDAO.read(charles.getDeveloperId());
         System.out.println(charles.getFirstName());
 
         System.out.println("delete charles");
-        devDAO.delete(3);
+        devDAO.delete(charles.getDeveloperId());
 
         System.out.println("create skills");
         Skill java = new Skill("Java", "Java development");
@@ -106,11 +106,11 @@ public class Main {
         skDAO.create(jav);
 
         System.out.println("update jav");
-        skDAO.update(4,java);
+        skDAO.update(jav.getSkillId(),java);
         jav = skDAO.read(4);
         System.out.println(jav.getSkillDescription());
         System.out.println("delete jav");
-        skDAO.delete(4);
+        skDAO.delete(jav.getSkillId());
 
         System.out.println("create projects");
         Project paysystem = new Project ("Pay System", "development of salary payment system");
@@ -126,74 +126,94 @@ public class Main {
         prDAO.create(sitesdev);
 
         System.out.println("update sitesdev");
-        prDAO.update(4, sitedev);
-        sitesdev = prDAO.read(4);
+        prDAO.update(sitesdev.getProjectId(), sitedev);
+        sitesdev = prDAO.read(sitesdev.getProjectId());
         System.out.println(sitesdev.getProjectDescription());
 
         System.out.println("delete sitesdev");
-        prDAO.delete(4);
+        prDAO.delete(sitesdev.getProjectId());
 
         System.out.println("adding skills to Guillaume");
         // add java and python to guillaume
-        skDAO.addSkillToDeveloper(1,1);
-        skDAO.addSkillToDeveloper(1,3);
+        skDAO.addSkillToDeveloper(guillaume.getDeveloperId(),java.getSkillId());
+        skDAO.addSkillToDeveloper(guillaume.getDeveloperId(),java.getSkillId());
 
         System.out.println("adding skills to Igor");
         // add java, python, and webdev to Igor
-        skDAO.addSkillToDeveloper(3,1);
-        skDAO.addSkillToDeveloper(3,2);
-        skDAO.addSkillToDeveloper(3,3);
+        skDAO.addSkillToDeveloper(igor.getDeveloperId(),java.getSkillId());
+        skDAO.addSkillToDeveloper(igor.getDeveloperId(),python.getSkillId());
+        skDAO.addSkillToDeveloper(igor.getDeveloperId(),web.getSkillId());
 
         System.out.println("adding skills to elena");
         // add webdev to Elena
-        skDAO.addSkillToDeveloper(2,2);
-
+        skDAO.addSkillToDeveloper(elena.getDeveloperId(),web.getSkillId());
 
         System.out.println("adding projects to developers");
         // add projects 1 and 3 to igor and guillaume
         System.out.println("adding projects to guillaume");
-        prDAO.addProjectToDeveloper(1,1);
-        prDAO.addProjectToDeveloper(3,1);
+        prDAO.addProjectToDeveloper(paysystem.getProjectId(),guillaume.getDeveloperId());
+        prDAO.addProjectToDeveloper(tool.getProjectId(),guillaume.getDeveloperId());
         System.out.println("adding projects to igor");
-        prDAO.addProjectToDeveloper(1,3);
-        prDAO.addProjectToDeveloper(3,3);
+        prDAO.addProjectToDeveloper(paysystem.getProjectId(),igor.getDeveloperId());
+        prDAO.addProjectToDeveloper(tool.getProjectId(),igor.getDeveloperId());
 
         // add project 2 to elena
         System.out.println("adding projects to elena");
-        prDAO.addProjectToDeveloper(2,2);
+        prDAO.addProjectToDeveloper(sitedev.getProjectId(),elena.getDeveloperId());
 
         System.out.println("adding projects to clients");
         // add projects to clients
-        custDAO.addProjectToCustomer(1,4);
-        custDAO.addProjectToCustomer(2,3);
-        custDAO.addProjectToCustomer(3,1);
-//
+        custDAO.addProjectToCustomer(paysystem.getProjectId(),vk.getId());
+        custDAO.addProjectToCustomer(sitedev.getProjectId(),webdev.getId());
+        custDAO.addProjectToCustomer(tool.getProjectId(),ibm.getId());
+
         // add developers to companies
         System.out.println("adding developers to companies");
-        compDAO.addCompanyToDeveloper(1,3);
-        compDAO.addCompanyToDeveloper(2,1);
-        compDAO.addCompanyToDeveloper(3, 2);
+        compDAO.addCompanyToDeveloper(ibm.getId(),igor.getDeveloperId());
+        compDAO.addCompanyToDeveloper(vk.getId(),guillaume.getDeveloperId());
+        compDAO.addCompanyToDeveloper(webdev.getId(), elena.getDeveloperId());
 
         System.out.println("testing skills");
         Skill english = new Skill("English", "fluent in English");
         skDAO.create(english);
         System.out.println(english.getSkillId() + ", " + english.getSkillName());
 
-        //compDAO.delete(1);
-        //compDAO.delete(2);
-        //compDAO.delete(3);
-//
-        //devDAO.delete(1);
-        //devDAO.delete(2);
-        //devDAO.delete(3);
-//
-        //custDAO.delete(1);
-        //custDAO.delete(2);
-        //custDAO.delete(3);
-//
-        //prDAO.delete(1);
-        //prDAO.delete(2);
-        //prDAO.delete(3);
+       /*
+       DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
+       DAODevelopersImpl devDAO = new DAODevelopersImpl();
+       DAOCustomersImpl custDAO = new DAOCustomersImpl();
+       DAOProjectsImpl prDAO = new DAOProjectsImpl();
+       DAOSkillsImpl skDAO = new DAOSkillsImpl();
+
+       Company test = new Company("test", "test","test");
+       compDAO.create(test);
+
+         compDAO.delete(5);
+         compDAO.delete(6);
+         compDAO.delete(7);
+         compDAO.delete(4);
+         compDAO.delete(8);
+
+         devDAO.delete(5);
+         devDAO.delete(6);
+         devDAO.delete(7);
+         devDAO.delete(8);
+
+         custDAO.delete(5);
+         custDAO.delete(6);
+         custDAO.delete(7);
+         custDAO.delete(8);
+
+         prDAO.delete(5);
+         prDAO.delete(6);
+         prDAO.delete(7);
+         prDAO.delete(8);
+
+         skDAO.delete(5);
+         skDAO.delete(6);
+         skDAO.delete(7);
+         skDAO.delete(8);
+                            */
 
     }
 }
