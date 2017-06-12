@@ -11,6 +11,7 @@ public interface DAOCustomers {
     void update (int customerId, Customer customer);
     Customer read(int customerId);
     void delete(int customerId);
+    void addProjectToCustomer(int projectId, int custId);
 
 }
 

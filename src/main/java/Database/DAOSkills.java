@@ -11,5 +11,7 @@ public interface DAOSkills {
     void update (int companyId, Skill skill);
     Skill read(int skillId);
     void delete(int skillId);
+    void addSkillToDeveloper(int devId, int skillId);
+
 
 }

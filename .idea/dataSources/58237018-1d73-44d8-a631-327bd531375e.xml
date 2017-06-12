@@ -56,7 +56,7 @@
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="24" parent="9" name="company_id">
+    <index id="24" parent="9" name="companies_developers_ibfk_2">
       <ColNames>company_id</ColNames>
     </index>
     <key id="25" parent="9" name="PRIMARY">
@@ -71,6 +71,7 @@ company_id</ColNames>
       <RefTableName>developers</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <foreign-key id="27" parent="9" name="companies_developers_ibfk_2">
       <ColNames>company_id</ColNames>
@@ -78,6 +79,7 @@ company_id</ColNames>
       <RefTableName>companies</RefTableName>
       <RefColNames>company_id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <column id="28" parent="10" name="customer_id">
       <Position>1</Position>
@@ -120,7 +122,7 @@ company_id</ColNames>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="36" parent="11" name="project_id">
+    <index id="36" parent="11" name="customers_projects_ibfk_2">
       <ColNames>project_id</ColNames>
     </index>
     <key id="37" parent="11" name="PRIMARY">
@@ -135,6 +137,7 @@ project_id</ColNames>
       <RefTableName>customers</RefTableName>
       <RefColNames>customer_id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <foreign-key id="39" parent="11" name="customers_projects_ibfk_2">
       <ColNames>project_id</ColNames>
@@ -142,6 +145,7 @@ project_id</ColNames>
       <RefTableName>projects</RefTableName>
       <RefColNames>project_id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <column id="40" parent="12" name="id">
       <Position>1</Position>
@@ -204,7 +208,7 @@ project_id</ColNames>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="52" parent="13" name="skill_id">
+    <index id="52" parent="13" name="developers_skills_ibfk_2">
       <ColNames>skill_id</ColNames>
     </index>
     <key id="53" parent="13" name="PRIMARY">
@@ -219,6 +223,7 @@ skill_id</ColNames>
       <RefTableName>developers</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <foreign-key id="55" parent="13" name="developers_skills_ibfk_2">
       <ColNames>skill_id</ColNames>
@@ -226,6 +231,7 @@ skill_id</ColNames>
       <RefTableName>skills</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <column id="56" parent="14" name="project_id">
       <Position>1</Position>
@@ -237,7 +243,7 @@ skill_id</ColNames>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="58" parent="14" name="developer_id">
+    <index id="58" parent="14" name="project_developers_ibfk_1">
       <ColNames>developer_id</ColNames>
     </index>
     <key id="59" parent="14" name="PRIMARY">
@@ -252,6 +258,7 @@ developer_id</ColNames>
       <RefTableName>projects</RefTableName>
       <RefColNames>project_id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <foreign-key id="61" parent="14" name="project_developers_ibfk_1">
       <ColNames>developer_id</ColNames>
@@ -259,6 +266,7 @@ developer_id</ColNames>
       <RefTableName>developers</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <column id="62" parent="15" name="project_id">
       <Position>1</Position>
@@ -267,27 +275,37 @@ developer_id</ColNames>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
     <column id="63" parent="15" name="project_description">
+      <Position>3</Position>
+      <DataType>varchar(250)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="64" parent="15" name="project_name">
       <Position>2</Position>
       <DataType>varchar(250)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="64" parent="15" name="PRIMARY">
+    <key id="65" parent="15" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>project_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="65" parent="16" name="id">
+    <column id="66" parent="16" name="id">
       <Position>1</Position>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="66" parent="16" name="skillName">
+    <column id="67" parent="16" name="skillName">
       <Position>2</Position>
       <DataType>varchar(250)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="67" parent="16" name="PRIMARY">
+    <column id="68" parent="16" name="skillDescription">
+      <Position>3</Position>
+      <DataType>varchar(250)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="69" parent="16" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>

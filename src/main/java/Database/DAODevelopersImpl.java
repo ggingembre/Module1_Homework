@@ -2,6 +2,9 @@ package Database;
 
 import Classes.Developer;
 import java.sql.*;
+import Classes.Utils;
+
+import static Classes.Utils.getConnection;
 
 /**
  * Created by guillaume on 6/8/17.
@@ -9,7 +12,7 @@ import java.sql.*;
 public class DAODevelopersImpl implements DAODevelopers {
 
     public void create(Developer developer) {
-
+        int dbDevId = -1;
         Connection con = null;
         try {
             con = getConnection();
@@ -25,7 +28,19 @@ public class DAODevelopersImpl implements DAODevelopers {
                                 developer.getJobTitle() + "', " +
                                 developer.getSalary() + ")";
 
-            statement.execute(sql);
+            statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ResultSet rs = statement.getGeneratedKeys();
+
+            if (rs.next()) {
+                dbDevId = rs.getInt(1);
+            } else {
+
+                System.out.println("error in retrieving auto generated ID key from DB");
+            }
+
+            developer.setDeveloperId(dbDevId);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -127,14 +142,6 @@ public class DAODevelopersImpl implements DAODevelopers {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-    }
-
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/homework11" +
-                        "?serverTimezone=UTC" +
-                        "&autoReconnect=true&useSSL=false",
-                "root","1");
 
     }
 }

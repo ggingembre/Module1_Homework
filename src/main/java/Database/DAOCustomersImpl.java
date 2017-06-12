@@ -1,8 +1,11 @@
 package Database;
 
 import Classes.Customer;
+import Classes.Utils;
 
 import java.sql.*;
+
+import static Classes.Utils.getConnection;
 
 /**
  * Created by guillaume on 6/8/17.
@@ -12,7 +15,7 @@ public class DAOCustomersImpl implements DAOCustomers {
 
 
     public void create(Customer customer) {
-
+        int dbCustId = -1;
         Connection con = null;
         try {
             con = getConnection();
@@ -20,7 +23,19 @@ public class DAOCustomersImpl implements DAOCustomers {
             String sql = "INSERT INTO customers (customer_id, customer_name, customer_address, customer_phone, customer_description) " +
                     "VALUES (" + customer.getCustomerId() + ", '" + customer.getCustomerName() + "', '" + customer.getCustomerAddress() +
                     "' , '" + customer.getCustomerPhone() + "', '" + customer.getCustomerDescription() + "')";
-            statement.execute(sql);
+            statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+
+            ResultSet rs = statement.getGeneratedKeys();
+
+            if (rs.next()) {
+                dbCustId = rs.getInt(1);
+            } else {
+
+                System.out.println("error in retrieving auto generated ID key from DB");
+            }
+
+            customer.setCustomerId(dbCustId);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -102,11 +117,28 @@ public class DAOCustomersImpl implements DAOCustomers {
 
     }
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/homework11" +
-                        "?serverTimezone=UTC" +
-                        "&autoReconnect=true&useSSL=false",
-                "root","1");
+    public void addProjectToCustomer(int projectId, int custId){
+
+        Connection con = null;
+        try {
+            con = getConnection();
+            Statement statement = con.createStatement();
+            String sql = "INSERT INTO customers_projects (customer_id, project_id) " +
+                    "VALUES (" + custId + ", " + projectId  + ")";
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (con!=null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
 
     }
+
+
 }

@@ -4,20 +4,36 @@ import Classes.Project;
 
 import java.sql.*;
 
+import Classes.Utils;
+
+import static Classes.Utils.getConnection;
+
 /**
  * Created by guillaume on 6/8/17.
  */
 public class DAOProjectsImpl implements DAOProjects {
 
     public void create(Project project) {
-
+        int dbProjectId = -1;
         Connection con = null;
         try {
             con = getConnection();
             Statement statement = con.createStatement();
             String sql = "INSERT INTO projects (project_id, project_name, project_description) " +
                     "VALUES (" + project.getProjectId()+ ", '" + project.getProjectName() + "', '" + project.getProjectDescription() + "')";
-            statement.execute(sql);
+            statement.execute(sql, Statement.RETURN_GENERATED_KEYS); // rs = stmt.getGeneratedKeys();
+
+            ResultSet rs = statement.getGeneratedKeys();
+
+            if (rs.next()) {
+                dbProjectId = rs.getInt(1);
+            } else {
+
+                System.out.println("error in retrieving auto generated ID key from DB");
+            }
+
+            project.setProjectId(dbProjectId);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -91,11 +107,28 @@ public class DAOProjectsImpl implements DAOProjects {
         }
     }
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/homework11" +
-                        "?serverTimezone=UTC" +
-                        "&autoReconnect=true&useSSL=false",
-                "root","1");
+    public void addProjectToDeveloper(int projectId, int devId){
+
+        Connection con = null;
+        try {
+            con = getConnection();
+            Statement statement = con.createStatement();
+            String sql = "INSERT INTO project_developers (project_id, developer_id) " +
+                    "VALUES (" + projectId + ", " + devId  + ")";
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (con!=null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
 
     }
+
+
 }

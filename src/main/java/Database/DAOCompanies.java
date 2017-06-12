@@ -11,6 +11,6 @@ public interface DAOCompanies {
     void update (int companyId, Company company);
     Company read(int companyId);
     void delete(int companyId);
-
+    void addCompanyToDeveloper(int compId, int devId);
 
 }

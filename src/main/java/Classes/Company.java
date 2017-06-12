@@ -12,8 +12,7 @@ public class Company {
 
     public Company (){}
 
-    public Company(int id, String companyName, String companyAddress, String companyDescription) {
-        this.id = id;
+    public Company(String companyName, String companyAddress, String companyDescription) {
         this.companyName = companyName;
         this.companyAddress = companyAddress;
         this.companyDescription = companyDescription;

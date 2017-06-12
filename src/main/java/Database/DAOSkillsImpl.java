@@ -4,6 +4,8 @@ import Classes.Skill;
 
 import java.sql.*;
 
+import static Classes.Utils.getConnection;
+
 /**
  * Created by guillaume on 6/8/17.
  */
@@ -11,14 +13,26 @@ public class DAOSkillsImpl implements DAOSkills {
 
 
     public void create(Skill skill) {
-
+        int dbSkillId = -1;
         Connection con = null;
         try {
             con = getConnection();
             Statement statement = con.createStatement();
-            String sql = "INSERT INTO skills (id, skillName, skillDescription) " +
-                    "VALUES (" + skill.getSkillId()+ ", '" + skill.getSkillName() + "', '" + skill.getSkillDescription() + "')";
-            statement.execute(sql);
+            String sql = "INSERT INTO skills (skillName, skillDescription) " +
+                    "VALUES ('" + skill.getSkillName() + "', '" + skill.getSkillDescription() + "')";
+            statement.execute(sql, Statement.RETURN_GENERATED_KEYS); // rs = stmt.getGeneratedKeys();
+
+            ResultSet rs = statement.getGeneratedKeys();
+
+            if (rs.next()) {
+                 dbSkillId = rs.getInt(1);
+            } else {
+
+                System.out.println("error in retrieving auto generated ID key from DB");
+            }
+
+            skill.setSkillId(dbSkillId);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -92,11 +106,26 @@ public class DAOSkillsImpl implements DAOSkills {
         }
     }
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/homework11" +
-                        "?serverTimezone=UTC" +
-                        "&autoReconnect=true&useSSL=false",
-                "root","1");
+    public void addSkillToDeveloper(int devId, int skillId){
+
+        Connection con = null;
+        try {
+            con = getConnection();
+            Statement statement = con.createStatement();
+            String sql = "INSERT INTO developers_skills (developer_id, skill_id) " +
+                    "VALUES (" + devId + ", " + skillId  + ")";
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (con!=null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
 
     }
 

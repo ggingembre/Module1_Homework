@@ -11,5 +11,6 @@ public interface DAOProjects {
     void update (int projectId, Project project);
     Project read(int projectId);
     void delete(int projectId);
+    void addProjectToDeveloper(int projectId, int devId);
 
 }

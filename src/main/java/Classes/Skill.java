@@ -11,11 +11,11 @@ public class Skill {
 
     public Skill (){}
 
-    public Skill(int skillId, String skillName, String skillDescription) {
-        this.skillId = skillId;
+    public Skill(String skillName, String skillDescription) {
         this.skillName = skillName;
         this.skillDescription = skillDescription;
     }
+
 
     public int getSkillId() {
         return skillId;

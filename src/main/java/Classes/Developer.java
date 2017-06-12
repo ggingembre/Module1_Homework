@@ -17,9 +17,8 @@ public class Developer {
 
     public Developer (){}
 
-    public Developer(int developerId, String firstName, String lastName, String gender,
+    public Developer(String firstName, String lastName, String gender,
                      String address, String email, String phone, String jobTitle, double salary) {
-        this.developerId = developerId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;

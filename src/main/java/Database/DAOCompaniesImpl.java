@@ -1,8 +1,11 @@
 package Database;
 
 import Classes.Company;
+import Classes.Utils;
 
 import java.sql.*;
+
+import static Classes.Utils.getConnection;
 
 /**
  * Created by guillaume on 6/7/17.
@@ -10,7 +13,7 @@ import java.sql.*;
 public class DAOCompaniesImpl implements DAOCompanies {
 
     public void create(Company company) {
-
+        int dbCompId = -1;
         Connection con = null;
         try {
             con = getConnection();
@@ -18,7 +21,19 @@ public class DAOCompaniesImpl implements DAOCompanies {
             String sql = "INSERT INTO companies (company_id, company_name, company_address, company_description) " +
                     "VALUES (" + company.getId() + ", '" + company.getCompanyName() + "', '" + company.getCompanyAddress() +
                     "' , '" + company.getCompanyDescription() + "')";
-            statement.execute(sql);
+            statement.execute(sql, Statement.RETURN_GENERATED_KEYS); // rs = stmt.getGeneratedKeys();
+
+            ResultSet rs = statement.getGeneratedKeys();
+
+            if (rs.next()) {
+                dbCompId = rs.getInt(1);
+            } else {
+
+                System.out.println("error in retrieving auto generated ID key from DB");
+            }
+
+            company.setId(dbCompId);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -101,11 +116,26 @@ public class DAOCompaniesImpl implements DAOCompanies {
         }
     }
 
-    private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/homework11" +
-                "?serverTimezone=UTC" +
-                        "&autoReconnect=true&useSSL=false",
-                "root","1");
+    public void addCompanyToDeveloper(int compId, int devId){
+
+        Connection con = null;
+        try {
+            con = getConnection();
+            Statement statement = con.createStatement();
+            String sql = "INSERT INTO companies_developers (developer_id, company_id) " +
+                    "VALUES (" + devId + ", " + compId  + ")";
+            statement.execute(sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (con!=null){
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
 
     }
 
