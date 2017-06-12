@@ -107,7 +107,7 @@ public class Main {
 
         System.out.println("update jav");
         skDAO.update(jav.getSkillId(),java);
-        jav = skDAO.read(4);
+        jav = skDAO.read(jav.getSkillId());
         System.out.println(jav.getSkillDescription());
         System.out.println("delete jav");
         skDAO.delete(jav.getSkillId());
@@ -136,7 +136,7 @@ public class Main {
         System.out.println("adding skills to Guillaume");
         // add java and python to guillaume
         skDAO.addSkillToDeveloper(guillaume.getDeveloperId(),java.getSkillId());
-        skDAO.addSkillToDeveloper(guillaume.getDeveloperId(),java.getSkillId());
+        skDAO.addSkillToDeveloper(guillaume.getDeveloperId(),python.getSkillId());
 
         System.out.println("adding skills to Igor");
         // add java, python, and webdev to Igor
@@ -178,8 +178,8 @@ public class Main {
         skDAO.create(english);
         System.out.println(english.getSkillId() + ", " + english.getSkillName());
 
-       /*
-       DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
+
+       /*DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
        DAODevelopersImpl devDAO = new DAODevelopersImpl();
        DAOCustomersImpl custDAO = new DAOCustomersImpl();
        DAOProjectsImpl prDAO = new DAOProjectsImpl();
@@ -188,32 +188,32 @@ public class Main {
        Company test = new Company("test", "test","test");
        compDAO.create(test);
 
-         compDAO.delete(5);
-         compDAO.delete(6);
-         compDAO.delete(7);
-         compDAO.delete(4);
-         compDAO.delete(8);
+         compDAO.delete(9);
+         compDAO.delete(10);
+         compDAO.delete(11);
+         compDAO.delete(12);
 
-         devDAO.delete(5);
-         devDAO.delete(6);
-         devDAO.delete(7);
-         devDAO.delete(8);
 
-         custDAO.delete(5);
-         custDAO.delete(6);
-         custDAO.delete(7);
-         custDAO.delete(8);
+         devDAO.delete(9);
+         devDAO.delete(10);
+         devDAO.delete(11);
+         devDAO.delete(12);
 
-         prDAO.delete(5);
-         prDAO.delete(6);
-         prDAO.delete(7);
-         prDAO.delete(8);
+         custDAO.delete(9);
+         custDAO.delete(10);
+         custDAO.delete(11);
+         custDAO.delete(12);
 
-         skDAO.delete(5);
-         skDAO.delete(6);
-         skDAO.delete(7);
-         skDAO.delete(8);
-                            */
+         prDAO.delete(9);
+         prDAO.delete(10);
+         prDAO.delete(11);
+         prDAO.delete(12);
+
+         skDAO.delete(9);
+         skDAO.delete(10);
+         skDAO.delete(11);
+         skDAO.delete(12);*/
+
 
     }
 }
