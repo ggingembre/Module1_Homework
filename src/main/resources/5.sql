@@ -5,7 +5,10 @@ SELECT
   companies.company_name,
   -- customers.customer_id,
   customers.customer_name,
-  ((projects.cost) - SUM(developers.salary)) AS `profit`
+  MIN((projects.cost) - SUM(developers.salary)) AS `profit`
+-- when I run MIN((projects.cost) - SUM(developers.salary)) AS `profit` I get
+-- an error message: "invalid use of group function
+-- Without min, I am computing the profit per company, per customer, per project
 
 FROM
     companies
@@ -22,5 +25,5 @@ FROM
   INNER JOIN
     customers ON customers_projects.customer_id = customers.customer_id
 
-GROUP BY projects.project_id, companies.company_id, customers.customer_id
+GROUP BY companies.company_id, customers.customer_id, projects.project_id
 ORDER BY `profit` DESC;
