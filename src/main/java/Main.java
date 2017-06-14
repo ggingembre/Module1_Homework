@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-       System.out.println("Check if database exists, if not create it");
+      System.out.println("Check if database exists, if not create it");
 
        if (!Utils.checkDBExists("homework11")) {
            try {
@@ -62,7 +62,7 @@ public class Main {
         jf = custDAO.read(jf.getCustomerId());
         System.out.println(jf.getCustomerName());
 
-        System.out.println("delete embassy");
+        System.out.println("delete jean francois");
         custDAO.delete(jf.getCustomerId());
 
 
@@ -75,6 +75,10 @@ public class Main {
                 "gg@gg.com", "+38044000000", "JAVA developer", 2000);
         Developer igor = new Developer("Igor", "G", "M","Kiev, Ukraine",
                 "igor@igor.com", "+380441111111","Senior Java Team Leader", 4000);
+        Developer guillaume2 = new Developer("Guillaume2", "G", "M", "Kiev, Ukraine",
+                "gg@gg.com", "+38044000002", "JAVA developer", 1000);
+     Developer igor2 = new Developer("Igor2", "G2", "M","Kiev, Ukraine",
+             "igor@igor.com", "+380441111112","Java Developer", 2000);
 
 
         System.out.println("saving them to DB");
@@ -83,6 +87,8 @@ public class Main {
         devDAO.create(elena);
         devDAO.create(charles);
         devDAO.create(igor);
+        devDAO.create(guillaume2);
+        devDAO.create(igor2);
 
         System.out.println("Update charles in db and in memory");
         devDAO.update(charles.getDeveloperId(),guillaume);
@@ -137,12 +143,18 @@ public class Main {
         // add java and python to guillaume
         skDAO.addSkillToDeveloper(guillaume.getDeveloperId(),java.getSkillId());
         skDAO.addSkillToDeveloper(guillaume.getDeveloperId(),python.getSkillId());
+        skDAO.addSkillToDeveloper(guillaume2.getDeveloperId(),java.getSkillId());
+        skDAO.addSkillToDeveloper(guillaume2.getDeveloperId(),python.getSkillId());
 
         System.out.println("adding skills to Igor");
         // add java, python, and webdev to Igor
         skDAO.addSkillToDeveloper(igor.getDeveloperId(),java.getSkillId());
         skDAO.addSkillToDeveloper(igor.getDeveloperId(),python.getSkillId());
         skDAO.addSkillToDeveloper(igor.getDeveloperId(),web.getSkillId());
+
+        skDAO.addSkillToDeveloper(igor2.getDeveloperId(),java.getSkillId());
+        skDAO.addSkillToDeveloper(igor2.getDeveloperId(),python.getSkillId());
+        skDAO.addSkillToDeveloper(igor2.getDeveloperId(),web.getSkillId());
 
         System.out.println("adding skills to elena");
         // add webdev to Elena
@@ -151,11 +163,11 @@ public class Main {
         System.out.println("adding projects to developers");
         // add projects 1 and 3 to igor and guillaume
         System.out.println("adding projects to guillaume");
-        prDAO.addProjectToDeveloper(paysystem.getProjectId(),guillaume.getDeveloperId());
         prDAO.addProjectToDeveloper(tool.getProjectId(),guillaume.getDeveloperId());
+        prDAO.addProjectToDeveloper(tool.getProjectId(),guillaume2.getDeveloperId());
         System.out.println("adding projects to igor");
         prDAO.addProjectToDeveloper(paysystem.getProjectId(),igor.getDeveloperId());
-        prDAO.addProjectToDeveloper(tool.getProjectId(),igor.getDeveloperId());
+        prDAO.addProjectToDeveloper(paysystem.getProjectId(),igor2.getDeveloperId());
 
         // add project 2 to elena
         System.out.println("adding projects to elena");
@@ -170,14 +182,15 @@ public class Main {
         // add developers to companies
         System.out.println("adding developers to companies");
         compDAO.addCompanyToDeveloper(ibm.getId(),igor.getDeveloperId());
+        compDAO.addCompanyToDeveloper(ibm.getId(),igor2.getDeveloperId());
         compDAO.addCompanyToDeveloper(vk.getId(),guillaume.getDeveloperId());
+        compDAO.addCompanyToDeveloper(vk.getId(),guillaume2.getDeveloperId());
         compDAO.addCompanyToDeveloper(webdev.getId(), elena.getDeveloperId());
 
         System.out.println("testing skills");
         Skill english = new Skill("English", "fluent in English");
         skDAO.create(english);
         System.out.println(english.getSkillId() + ", " + english.getSkillName());
-
 
        /*DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
        DAODevelopersImpl devDAO = new DAODevelopersImpl();
@@ -211,6 +224,7 @@ public class Main {
          skDAO.delete(14);
          skDAO.delete(15);
          skDAO.delete(16);*/
+
 
 
     }
