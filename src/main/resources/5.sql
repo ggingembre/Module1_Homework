@@ -5,7 +5,7 @@ SELECT
   companies.company_name,
   customers.customer_id,
   customers.customer_name,
-  MIN(SUM(projects.cost) - SUM(developers.salary)) AS `minimum profit`
+  ((projects.cost) - SUM(developers.salary)) AS `minimum profit`
 
 FROM
     companies
@@ -22,5 +22,5 @@ FROM
   INNER JOIN
     customers ON customers_projects.customer_id = customers.customer_id
 
-GROUP BY companies.company_id
-ORDER BY companies.company_id DESC;
+GROUP BY projects.project_id, companies.company_id, customers.customer_id
+ORDER BY `minimum profit` DESC;
