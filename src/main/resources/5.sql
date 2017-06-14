@@ -26,5 +26,7 @@ FROM
   INNER JOIN
     customers ON customers_projects.customer_id = customers.customer_id
 
-GROUP BY companies.company_id, customers.customer_id, projects.project_id
+   WHERE (projects.cost) - SUM(developers.salary) = (SELECT MIN(((projects.cost) - SUM(developers.salary))))
+
+GROUP BY customers.customer_id, projects.project_id, companies.company_id
 ORDER BY `profit` DESC;
