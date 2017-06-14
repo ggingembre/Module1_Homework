@@ -1,13 +1,22 @@
-
 USE homework11;
 
 SELECT
-  SUM (projects.cost - developers.salary) AS `profit`
+  customers.customer_id,
+  customers.customer_name,
+  SUM(projects.cost) - SUM(developers.salary) AS `profit`
 
 FROM
-  projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  developers
+  INNER JOIN
+    project_developers ON project_developers.developer_id = developers.id
+  INNER JOIN
+    projects ON project_developers.project_id = projects.project_id
+  INNER JOIN
+    customers_projects ON projects.project_id = customers_projects.project_id
+  INNER JOIN
+    customers ON customers_projects.customer_id = customers.customer_id
 
-GROUP BY projects.project_id
+  WHERE customers.customer_id = 20
+
+GROUP BY customers.customer_id
 ORDER BY profit DESC;
