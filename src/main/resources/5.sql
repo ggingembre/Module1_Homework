@@ -1,11 +1,11 @@
 USE homework11;
 
 SELECT
-  companies.company_id,
+  -- companies.company_id,
   companies.company_name,
-  customers.customer_id,
+  -- customers.customer_id,
   customers.customer_name,
-  ((projects.cost) - SUM(developers.salary)) AS `minimum profit`
+  ((projects.cost) - SUM(developers.salary)) AS `profit`
 
 FROM
     companies
@@ -23,4 +23,4 @@ FROM
     customers ON customers_projects.customer_id = customers.customer_id
 
 GROUP BY projects.project_id, companies.company_id, customers.customer_id
-ORDER BY `minimum profit` DESC;
+ORDER BY `profit` DESC;
