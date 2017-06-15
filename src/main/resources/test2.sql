@@ -1,4 +1,5 @@
 -- syntax to select minimum profit table
+-- https://stackoverflow.com/questions/3839982/row-with-minimum-value-of-a-column
 
 USE homework11;
 

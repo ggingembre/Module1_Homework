@@ -8,7 +8,7 @@ import java.sql.SQLException;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
       System.out.println("Check if database exists, if not create it");
 
