@@ -1,4 +1,5 @@
 import Classes.Company;
+import Classes.Customer;
 import Database.*;
 import Exceptions.OutOfMenuRangeException;
 
@@ -211,10 +212,29 @@ public class Menu {
         System.out.println("Company Name: " + newCo.getCompanyName());
         System.out.println("Company address: " + newCo.getCompanyAddress());
         System.out.println("Company description: " + newCo.getCompanyDescription());
-        
+
     }
 
     private void createCustomer() {
+
+        System.out.println("You will now be prompted to enter the information about the new customer");
+
+        // public Customer(String customerName, String customerAddress, String customerPhone, String customerDescription)
+
+        String custName = readNameFromConsole("customer name");
+        String custAddress = readNameFromConsole("customer address");
+        String custPhone = readNameFromConsole("customer phone");
+        String custDesc = readNameFromConsole("customer description");
+
+        Customer newCust = new Customer(custName, custAddress, custPhone, custDesc);
+        custDAO.create(newCust);
+
+        System.out.println("You have created the following customer:");
+        System.out.println("Customer ID: "+ newCust.getCustomerId());
+        System.out.println("Customer Name: " + newCust.getCustomerName());
+        System.out.println("Customer address: " + newCust.getCustomerAddress());
+        System.out.println("Customer phone: " + newCust.getCustomerPhone());
+        System.out.println("Customer description: " + newCust.getCustomerDescription());
 
     }
 
