@@ -1,5 +1,6 @@
 import Classes.Company;
 import Classes.Customer;
+import Classes.Developer;
 import Database.*;
 import Exceptions.OutOfMenuRangeException;
 
@@ -240,6 +241,25 @@ public class Menu {
 
     private void createDeveloper() {
 
+            System.out.println("You will now be prompted to enter the information about the new developer");
+
+            //public Developer(String firstName, String lastName, String gender,
+            //    String address, String email, String phone, String jobTitle, double salary)
+
+            String devFirstName = readNameFromConsole("developer's first name");
+            String devLastName = readNameFromConsole("developer's last name");
+            String devGender = readNameFromConsole("developer's gender");
+            String devAddress = readNameFromConsole("developer's address");
+            String devEmail = readNameFromConsole("developer's email");
+            String devPhone = readNameFromConsole("developer's phone");
+            String jobTitle = readNameFromConsole("developer's job title");
+            Double salary = Double.parseDouble(readNameFromConsole("salary"));
+
+            Developer newDev = new Developer(devFirstName, devLastName, devGender, devAddress, devEmail, devPhone, jobTitle, salary);
+            devDAO.create(newDev);
+
+            System.out.println("You have created the following developer:");
+            System.out.println(newDev.toString());
     }
 
     private void createProject() {

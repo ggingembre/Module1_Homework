@@ -39,4 +39,13 @@ public class Project {
     public void setProjectDescription(String projectDescription) {
         this.projectDescription = projectDescription;
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", projectName='" + projectName + '\'' +
+                ", projectDescription='" + projectDescription + '\'' +
+                '}';
+    }
 }

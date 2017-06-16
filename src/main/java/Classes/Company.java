@@ -49,4 +49,14 @@ public class Company {
     public void setCompanyDescription(String companyDescription) {
         this.companyDescription = companyDescription;
     }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", companyName='" + companyName + '\'' +
+                ", companyAddress='" + companyAddress + '\'' +
+                ", companyDescription='" + companyDescription + '\'' +
+                '}';
+    }
 }

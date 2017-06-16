@@ -59,4 +59,15 @@ public class Customer {
     public void setCustomerDescription(String customerDescription) {
         this.customerDescription = customerDescription;
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", customerName='" + customerName + '\'' +
+                ", customerAddress='" + customerAddress + '\'' +
+                ", customerPhone='" + customerPhone + '\'' +
+                ", customerDescription='" + customerDescription + '\'' +
+                '}';
+    }
 }

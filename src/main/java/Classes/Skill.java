@@ -40,4 +40,13 @@ public class Skill {
     public void setSkillDescription(String skillDescription) {
         this.skillDescription = skillDescription;
     }
+
+    @Override
+    public String toString() {
+        return "Skill{" +
+                "skillId=" + skillId +
+                ", skillName='" + skillName + '\'' +
+                ", skillDescription='" + skillDescription + '\'' +
+                '}';
+    }
 }
