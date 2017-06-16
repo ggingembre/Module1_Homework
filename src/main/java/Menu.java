@@ -1,3 +1,4 @@
+import Classes.Company;
 import Database.*;
 import Exceptions.OutOfMenuRangeException;
 
@@ -194,6 +195,23 @@ public class Menu {
 
     private void createCompany() {
 
+        System.out.println("You will now be prompted to enter the information about the new company");
+
+       // Company(String companyName, String companyAddress, String companyDescription)
+
+        String compName = readNameFromConsole("company name");
+        String compAddress = readNameFromConsole("company address");
+        String compDesc = readNameFromConsole("company description");
+
+        Company newCo = new Company(compName, compAddress, compDesc);
+        compDAO.create(newCo);
+
+        System.out.println("You have created the following company:");
+        System.out.println("CompanyID: "+ newCo.getId());
+        System.out.println("Company Name: " + newCo.getCompanyName());
+        System.out.println("Company address: " + newCo.getCompanyAddress());
+        System.out.println("Company description: " + newCo.getCompanyDescription());
+        
     }
 
     private void createCustomer() {
@@ -305,5 +323,24 @@ public class Menu {
     private void DeleteSkillFromDev(){
 
     }
+
+    public static String readNameFromConsole(String wordDef) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String text = "";
+
+        System.out.println("Please enter the " + wordDef);
+
+        while (true) {
+            try {
+                text = br.readLine();
+                break;
+            } catch (IOException e) {
+                System.out.println("Incorrect input. Please enter the correct " + wordDef);
+                continue;
+            }
+        }
+        return text;
+    }
+
 
 }
