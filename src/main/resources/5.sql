@@ -5,14 +5,13 @@ USE homework11;
 
 -- the problem with this query is that I do not know how to select the min profit per company
 -- also, I do not know how to sum profit if one client has more than one project
--- finally, for some reason, the sorting by profit does not work
 
 SELECT
   company_name,
   customer_name,
   project_name,
   project_description,
-  (cost - SUM(developers.salary)) AS 'Profit'
+  (cost - SUM(developers.salary)) AS Profit
 
 FROM projects
   INNER JOIN project_developers ON projects.project_id = project_developers.project_id
@@ -23,7 +22,8 @@ FROM projects
   INNER JOIN customers ON customers_projects.customer_id = customers.customer_id
 
 GROUP BY companies.company_id, customers.customer_id, projects.project_id
-ORDER BY company_name ASC, customer_name, 'Profit' DESC;
+ORDER BY company_name ASC, (cost - SUM(developers.salary)) ASC;
+
 
 SELECT
   -- companies.company_id,

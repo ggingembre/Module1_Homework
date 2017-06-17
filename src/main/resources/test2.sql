@@ -13,7 +13,25 @@ FROM projects
   INNER JOIN developers ON project_developers.developer_id = developers.id
 
 GROUP BY projects.project_id
-ORDER BY 'Profit' ASC;
+ORDER BY (cost - SUM(developers.salary)) ASC LIMIT 1;
+
+SELECT
+  company_name,
+  project_name,
+  project_description,
+  (cost - SUM(developers.salary)) AS 'Profit'
+
+FROM projects
+  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
+  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN companies_developers ON developers.id = companies_developers.developer_id
+  INNER JOIN companies ON companies_developers.company_id = companies.company_id
+
+GROUP BY projects.project_id, company_name
+ORDER BY (cost - SUM(developers.salary)) ASC;
+
+
+
 
 SELECT
   project_name,
