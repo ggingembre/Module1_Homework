@@ -10,13 +10,16 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
+        DAOCustomersImpl custDAO = new DAOCustomersImpl();
+        DAODevelopersImpl devDAO = new DAODevelopersImpl();
+        DAOProjectsImpl proDAO = new DAOProjectsImpl();
+        DAOSkillsImpl skDAO = new DAOSkillsImpl();
 
-        Company newCo = compDAO.read("IBM");
 
-        System.out.println(newCo);
+        Menu menu = new Menu(compDAO, custDAO, devDAO, proDAO, skDAO);
 
+        menu.runMenu();
 
       /*System.out.println("Check if database exists, if not create it");
 

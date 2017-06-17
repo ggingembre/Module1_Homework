@@ -105,87 +105,115 @@ public class Menu {
         switch(choice){
             case 1:
                 createCompany();
+                Utils.pause();
                 break;
             case 2:
                 createCustomer();
+                Utils.pause();
                 break;
             case 3:
                 createDeveloper();
+                Utils.pause();
                 break;
             case 4:
                 createProject();
+                Utils.pause();
                 break;
             case 5:
                 createSkill();
+                Utils.pause();
                 break;
             case 6:
                 addDevToCo();
+                Utils.pause();
                 break;
             case 7:
                 addProjectToDev();
+                Utils.pause();
                 break;
             case 8:
                 addProjectToCustomer();
+                Utils.pause();
                 break;
             case 9:
                 addSkilltoDeveloper();
+                Utils.pause();
                 break;
             case 10:
                 updateCompany();
+                Utils.pause();
                 break;
             case 11:
                 updateCustomer();
+                Utils.pause();
                 break;
             case 12:
                 updateDeveloper();
+                Utils.pause();
                 break;
             case 13:
                 updateProject();
+                Utils.pause();
                 break;
             case 14:
                 updateSkill();
+                Utils.pause();
                 break;
             case 15:
                 readCompany();
+                Utils.pause();
                 break;
             case 16:
                 readCustomer();
+                Utils.pause();
                 break;
             case 17:
                 readDeveloper();
+                Utils.pause();
                 break;
             case 18:
                 readProject();
+                Utils.pause();
                 break;
             case 19:
                 readSkill();
+                Utils.pause();
                 break;
             case 20:
                 deleteCompany();
+                Utils.pause();
                 break;
             case 21:
                 deleteCustomer();
+                Utils.pause();
                 break;
             case 22:
                 deleteDeveloper();
+                Utils.pause();
                 break;
             case 23:
                 deleteProject();
+                Utils.pause();
                 break;
             case 24:
                 deleteSkill();
+                Utils.pause();
                 break;
             case 25:
                 DeleteDevFromCo();
+                Utils.pause();
                 break;
             case 26:
                 DeleteProFromDev();
+                Utils.pause();
                 break;
             case 27:
                 DeleteProFromCust();
+                Utils.pause();
                 break;
             case 28:
                 DeleteSkillFromDev();
+                Utils.pause();
                 break;
             case 29:
                 exit = true;
@@ -295,40 +323,136 @@ public class Menu {
     }
 
     private void addDevToCo(){
+        int devID = Integer.parseInt(readNameFromConsole("the id of the developer you want to add"));
+        int compID = Integer.parseInt(readNameFromConsole("the id of the company where the developer will be added"));
+
+        compDAO.addCompanyToDeveloper(compID,devID);
+
+        System.out.println("Done");
 
     }
 
     private void addProjectToDev(){
 
+        int projectID = Integer.parseInt(readNameFromConsole("the id of the project you want to add"));
+        int devID = Integer.parseInt(readNameFromConsole("the id of the developer you want to add to this project to"));
+
+        proDAO.addProjectToDeveloper(projectID,devID);
+
+        System.out.println("Done");
+
     }
 
     private void addProjectToCustomer(){
+
+        int projectID = Integer.parseInt(readNameFromConsole("the id of the project you want to add"));
+        int custID = Integer.parseInt(readNameFromConsole("the id of the customer you want to add to this project to"));
+
+        custDAO.addProjectToCustomer(projectID,custID);
+
+        System.out.println("Done");
 
     }
 
     private void addSkilltoDeveloper(){
 
+        int skillID = Integer.parseInt(readNameFromConsole("the id of the skill you want to add"));
+        int devID = Integer.parseInt(readNameFromConsole("the id of the developer you want to add to this skill to"));
+
+        skDAO.addSkillToDeveloper(devID, skillID);
+
+        System.out.println("Done");
+
     }
 
     private void updateCompany(){
 
-        
+        // Company(String companyName, String companyAddress, String companyDescription)
+
+        int compID = Integer.parseInt(readNameFromConsole("the id of the company you want to update"));
+        String compName = readNameFromConsole("company name");
+        String compAddress = readNameFromConsole("company address");
+        String compDesc = readNameFromConsole("company description");
+
+        Company newCo = new Company(compName, compAddress, compDesc);
+
+        if (compDAO.update(compID, newCo)) {
+            System.out.println("The data was updated");
+        } else {
+            System.out.println("The data could not be updated");
+        }
 
     }
 
     private void updateCustomer(){
 
+        // public Customer(String customerName, String customerAddress, String customerPhone, String customerDescription)
+
+        int custID = Integer.parseInt(readNameFromConsole("the id of the customer you want to update"));
+        String custName = readNameFromConsole("customer name");
+        String custAddress = readNameFromConsole("customer address");
+        String custPhone = readNameFromConsole("customer phone");
+        String custDesc = readNameFromConsole("customer description");
+
+        Customer newCust = new Customer(custName, custAddress, custPhone, custDesc);
+        if (custDAO.update(custID, newCust)) {
+            System.out.println("The data was updated");
+        } else {
+            System.out.println("The data could not be updated");
+        }
+
     }
 
     private void updateDeveloper(){
 
+        int devID = Integer.parseInt(readNameFromConsole("the id of the developer you want to update"));
+        String devFirstName = readNameFromConsole("developer's first name");
+        String devLastName = readNameFromConsole("developer's last name");
+        String devGender = readNameFromConsole("developer's gender");
+        String devAddress = readNameFromConsole("developer's address");
+        String devEmail = readNameFromConsole("developer's email");
+        String devPhone = readNameFromConsole("developer's phone");
+        String jobTitle = readNameFromConsole("developer's job title");
+        Double salary = Double.parseDouble(readNameFromConsole("salary"));
+
+        Developer newDev = new Developer(devFirstName, devLastName, devGender, devAddress, devEmail, devPhone, jobTitle, salary);
+
+        if (devDAO.update(devID, newDev)) {
+            System.out.println("The data was updated");
+        } else {
+            System.out.println("The data could not be updated");
+        }
     }
 
     private void updateProject(){
 
+        int projectID = Integer.parseInt(readNameFromConsole("the id of the project you want to update"));
+        String projectName = readNameFromConsole("project name");
+        String projectDescription = readNameFromConsole("project description");
+
+        Project newProject = new Project(projectName, projectDescription);
+
+        if (proDAO.update(projectID, newProject)) {
+            System.out.println("The data was updated");
+        } else {
+            System.out.println("The data could not be updated");
+        }
+
     }
 
     private void updateSkill(){
+
+        int skillID = Integer.parseInt(readNameFromConsole("the id of the skill you want to update"));
+        String skillName = readNameFromConsole("skill name");
+        String skillDescription = readNameFromConsole("skill description");
+
+        Skill newSkill = new Skill(skillName, skillDescription);
+
+        if (skDAO.update(skillID, newSkill)) {
+            System.out.println("The data was updated");
+        } else {
+            System.out.println("The data could not be updated");
+        }
 
     }
 

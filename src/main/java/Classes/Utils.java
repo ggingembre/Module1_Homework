@@ -1,8 +1,6 @@
 package Classes;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.sql.*;
 
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -74,6 +72,19 @@ public class Utils {
                         "?serverTimezone=UTC" +
                         "&autoReconnect=true&useSSL=false",
                 "root","1");
+
+    }
+
+    public static void pause(){
+
+        System.out.println("Please press any key to go back to the main menu");
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String text = "";
+        try {
+            text = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }
