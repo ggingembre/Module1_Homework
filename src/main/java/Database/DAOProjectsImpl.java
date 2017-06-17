@@ -47,7 +47,9 @@ public class DAOProjectsImpl implements DAOProjects {
         }
     }
 
-    public void update(int projectId, Project project) {
+    public boolean update(int projectId, Project project) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
 
@@ -65,9 +67,13 @@ public class DAOProjectsImpl implements DAOProjects {
             ps.setInt(3, id);
             ps.execute();
 
+            success = true;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return success;
 
     }
 
@@ -96,15 +102,19 @@ public class DAOProjectsImpl implements DAOProjects {
         }
     }
 
-    public void delete(int projectId) {
+    public boolean delete(int projectId) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
             Statement statement = con.createStatement();
             String sql = "DELETE FROM projects WHERE project_id=" + projectId;
             statement.execute(sql);
+            success = true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return success;
     }
 
     public void addProjectToDeveloper(int projectId, int devId){

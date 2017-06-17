@@ -8,9 +8,17 @@ import java.sql.SQLException;
  */
 public class Main {
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
 
-      System.out.println("Check if database exists, if not create it");
+
+        DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
+
+        Company newCo = compDAO.read("IBM");
+
+        System.out.println(newCo);
+
+
+      /*System.out.println("Check if database exists, if not create it");
 
        if (!Utils.checkDBExists("homework11")) {
            try {
@@ -224,8 +232,6 @@ public class Main {
          skDAO.delete(14);
          skDAO.delete(15);
          skDAO.delete(16);*/
-
-
 
     }
 }

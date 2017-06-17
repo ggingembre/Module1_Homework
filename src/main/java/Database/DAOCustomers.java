@@ -8,9 +8,9 @@ import Classes.Customer;
 public interface DAOCustomers {
 
     void create(Customer customer);
-    void update (int customerId, Customer customer);
+    boolean update (int customerId, Customer customer);
     Customer read(int customerId);
-    void delete(int customerId);
+    boolean delete(int customerId);
     void addProjectToCustomer(int projectId, int custId);
 
 }

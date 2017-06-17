@@ -8,9 +8,9 @@ import Classes.Project;
 public interface DAOProjects {
 
     void create(Project project);
-    void update (int projectId, Project project);
+    boolean update (int projectId, Project project);
     Project read(int projectId);
-    void delete(int projectId);
+    boolean delete(int projectId);
     void addProjectToDeveloper(int projectId, int devId);
 
 }

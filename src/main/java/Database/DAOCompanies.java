@@ -8,9 +8,9 @@ import Classes.Company;
 public interface DAOCompanies {
 
     void create(Company company);
-    void update (int companyId, Company company);
+    boolean update (int companyId, Company company);
     Company read(int companyId);
-    void delete(int companyId);
+    boolean delete(int companyId);
     void addCompanyToDeveloper(int compId, int devId);
 
 }

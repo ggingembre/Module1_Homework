@@ -8,8 +8,8 @@ import Classes.Developer;
 public interface DAODevelopers {
 
     void create(Developer developer);
-    void update (int developerId, Developer developer);
+    boolean update (int developerId, Developer developer);
     Developer read(int developerId);
-    void delete(int developerId);
+    boolean delete(int developerId);
 
 }

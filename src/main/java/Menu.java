@@ -1,6 +1,4 @@
-import Classes.Company;
-import Classes.Customer;
-import Classes.Developer;
+import Classes.*;
 import Database.*;
 import Exceptions.OutOfMenuRangeException;
 
@@ -264,9 +262,35 @@ public class Menu {
 
     private void createProject() {
 
+        System.out.println("You will now be prompted to enter the information about the new project");
+
+        // public Project(String projectName, String projectDescription)
+
+        String projectName = readNameFromConsole("project name");
+        String projectDescription = readNameFromConsole("project description");
+
+        Project newProject = new Project(projectName, projectDescription);
+        proDAO.create(newProject);
+
+        System.out.println("You have created the following project:");
+        System.out.println(newProject.toString());
+
     }
 
     private void createSkill(){
+
+        System.out.println("You will now be prompted to enter the information about the new skill:");
+
+        // public Project(String projectName, String projectDescription)
+
+        String skillName = readNameFromConsole("skill name");
+        String skillDescription = readNameFromConsole("skill description");
+
+        Skill newSkill = new Skill(skillName, skillDescription);
+        skDAO.create(newSkill);
+
+        System.out.println("You have created the following skill:");
+        System.out.println(newSkill.toString());
 
     }
 
@@ -288,6 +312,8 @@ public class Menu {
 
     private void updateCompany(){
 
+        
+
     }
 
     private void updateCustomer(){
@@ -308,43 +334,77 @@ public class Menu {
 
     private void readCompany() {
 
+        String compName = readNameFromConsole("company name");
+        System.out.println(compDAO.read(compName));
+
     }
 
     private void readCustomer(){
+
+        int custId = Integer.parseInt(readNameFromConsole("customer ID"));
+        System.out.println(custDAO.read(custId));
 
     }
 
     private void readDeveloper(){
 
+        int devId = Integer.parseInt(readNameFromConsole("developer ID"));
+        System.out.println(devDAO.read(devId));
+
     }
 
     private void readProject(){
+
+        int projectId = Integer.parseInt(readNameFromConsole("project ID"));
+        System.out.println(proDAO.read(projectId));
 
     }
 
     private void readSkill(){
 
+        int skillId = Integer.parseInt(readNameFromConsole("skill ID"));
+        System.out.println(skDAO.read(skillId));
+
     }
 
     private void deleteCompany(){
+
+        int compId = Integer.parseInt(readNameFromConsole("company ID"));
+        if (compDAO.delete(compId)){System.out.println("request completed");} else{
+            System.out.println("The request could not be completed successfully");
+        }
 
     }
 
     private void deleteCustomer(){
 
+        int custId = Integer.parseInt(readNameFromConsole("customer ID"));
+        if (custDAO.delete(custId)){System.out.println("request completed");} else{
+            System.out.println("The request could not be completed successfully");
+        }
+
     }
 
     private void deleteDeveloper(){
-
+        int devId = Integer.parseInt(readNameFromConsole("developer ID"));
+        if (devDAO.delete(devId)){System.out.println("request completed");} else{
+            System.out.println("The request could not be completed successfully");
+        }
     }
 
     private void deleteProject(){
-
+        int projectId = Integer.parseInt(readNameFromConsole("project ID"));
+        if (proDAO.delete(projectId)){System.out.println("request completed");} else{
+            System.out.println("The request could not be completed successfully");
+        }
     }
 
     private void deleteSkill(){
 
-
+        int skillId = Integer.parseInt(readNameFromConsole("skill ID"));
+        if (skDAO.delete(skillId)){System.out.println("request completed");} else{
+            System.out.println("The request could not be completed successfully");
+        }
     }
 
     private void DeleteDevFromCo(){

@@ -50,7 +50,9 @@ public class DAOCustomersImpl implements DAOCustomers {
     }
 
 
-    public void update(int customerId, Customer customer) {
+    public boolean update(int customerId, Customer customer) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
         PreparedStatement ps = con.prepareStatement("UPDATE customers set customer_name =?, " +
@@ -69,9 +71,13 @@ public class DAOCustomersImpl implements DAOCustomers {
         ps.setInt(5, id);
         ps.execute();
 
+        success = true;
+
     } catch (SQLException e) {
         throw new RuntimeException(e);
     }
+
+    return success;
 
     }
 
@@ -105,15 +111,20 @@ public class DAOCustomersImpl implements DAOCustomers {
     }
 
 
-    public void delete(int customerId) {
+    public boolean delete(int customerId) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
             Statement statement = con.createStatement();
             String sql = "DELETE FROM customers WHERE customer_id=" + customerId;
             statement.execute(sql);
+            success = true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return success;
 
     }
 

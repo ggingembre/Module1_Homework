@@ -47,7 +47,9 @@ public class DAOCompaniesImpl implements DAOCompanies {
         }
     }
 
-    public void update(int companyId, Company company) {
+    public boolean update(int companyId, Company company) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
             //Statement statement = con.createStatement();
@@ -65,6 +67,8 @@ public class DAOCompaniesImpl implements DAOCompanies {
             ps.setInt(4, id);
             ps.execute();
 
+            success = true;
+
             //String sql = "UPDATE companies set company_name = '" + name + "', company_address = '" +
             //        address + "', company_description = '" + description + "' WHERE company_id =" + companyId;
 
@@ -73,6 +77,8 @@ public class DAOCompaniesImpl implements DAOCompanies {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return success;
 
     }
 
@@ -105,15 +111,52 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
     }
 
-    public void delete(int companyId) {
+    public Company read(String companyName) {
+
+        try(Connection con = getConnection()){
+
+            Statement statement = con.createStatement();
+            String sql = "SELECT * FROM companies WHERE company_name LIKE '" + companyName + "'";
+            ResultSet rs = statement.executeQuery(sql);
+            Company company = new Company();
+
+            while (rs.next()){
+                int companyId = rs.getInt("company_id");
+                companyName = rs.getString("company_name");
+                String companyAddress = rs.getString("company_address");
+                String companyDescription = rs.getString("company_description");
+
+                company.setId(companyId);
+                company.setCompanyName(companyName);
+                company.setCompanyAddress(companyAddress);
+                company.setCompanyDescription(companyDescription);
+
+            }
+
+            return company;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+    public boolean delete(int companyId) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
             Statement statement = con.createStatement();
             String sql = "DELETE FROM companies WHERE company_id=" + companyId;
             statement.execute(sql);
+            success = true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return success;
+
     }
 
     public void addCompanyToDeveloper(int compId, int devId){

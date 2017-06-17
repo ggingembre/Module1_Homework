@@ -55,7 +55,9 @@ public class DAODevelopersImpl implements DAODevelopers {
     }
 
 
-    public void update(int developerId, Developer developer) {
+    public boolean update(int developerId, Developer developer) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
             PreparedStatement ps = con.prepareStatement("UPDATE developers set " +
@@ -90,10 +92,13 @@ public class DAODevelopersImpl implements DAODevelopers {
             ps.setInt(9, id);
             ps.execute();
 
+            success = true;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+        return success;
     }
 
 
@@ -133,15 +138,20 @@ public class DAODevelopersImpl implements DAODevelopers {
     }
 
 
-    public void delete(int developerId) {
+    public boolean delete(int developerId) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
             Statement statement = con.createStatement();
             String sql = "DELETE FROM developers WHERE id=" + developerId;
             statement.execute(sql);
+            success = true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return success;
 
     }
 }

@@ -46,7 +46,9 @@ public class DAOSkillsImpl implements DAOSkills {
         }
     }
 
-    public void update(int skillId, Skill skill) {
+    public boolean update(int skillId, Skill skill) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
 
@@ -64,9 +66,13 @@ public class DAOSkillsImpl implements DAOSkills {
             ps.setInt(3, id);
             ps.execute();
 
+            success = true;
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        return success;
 
     }
 
@@ -95,15 +101,19 @@ public class DAOSkillsImpl implements DAOSkills {
         }
     }
 
-    public void delete(int skillId) {
+    public boolean delete(int skillId) {
+
+        boolean success = false;
 
         try (Connection con = getConnection()){
             Statement statement = con.createStatement();
             String sql = "DELETE FROM skills WHERE id=" + skillId;
             statement.execute(sql);
+            success = true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return success;
     }
 
     public void addSkillToDeveloper(int devId, int skillId){
