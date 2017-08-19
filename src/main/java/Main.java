@@ -20,11 +20,11 @@ public class Main {
        //configuration.configure("hibernate.cfg.xml");
        //SessionFactory sessionFactory = configuration.buildSessionFactory();
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+       //EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
 
-        //SessionFactory sessionFactory = null;
-        EntityManager em = factory.createEntityManager();
-        em.getTransaction().begin();
+       ////SessionFactory sessionFactory = null;
+       //EntityManager em = factory.createEntityManager();
+       //em.getTransaction().begin();
 
         DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
         DAOCustomersImpl custDAO = new DAOCustomersImpl();

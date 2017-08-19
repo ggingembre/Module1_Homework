@@ -5,28 +5,85 @@ import Classes.Developer;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
 
-import java.util.TimeZone;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Repository;
-//import org.springframework.transaction.annotation.Transactional;
-//
-// @Repository
-// @Transactional
-//
 public class DAOCompaniesImpl implements DAOCompanies {
 
-   //@Autowired
-   private SessionFactory sessionFactory;
+   private Session currentSession;
+   private Transaction currentTransaction;
 
+   private static SessionFactory getSessionFactory(){
+       Configuration configuration = new Configuration().configure();
+       StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
+               .applySettings(configuration.getProperties());
+       SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
+       return sessionFactory;
+   }
 
-     public void create(Company company)
+   public Session openCurrentSession (){
+        currentSession = getSessionFactory().openSession();
+
+       return currentSession;
+   }
+
+    public Session openCurrentSessionwithTransaction() {
+        currentSession = getSessionFactory().openSession();
+        currentTransaction = currentSession.beginTransaction();
+        return currentSession;
+    }
+
+    public void closeCurrentSession() {
+        currentSession.close();
+    }
+
+    public void closeCurrentSessionwithTransaction() {
+        currentTransaction.commit();
+        currentSession.close();
+    }
+
+    public Session getCurrentSession() {
+        return currentSession;
+    }
+
+    public void setCurrentSession(Session currentSession) {
+        this.currentSession = currentSession;
+    }
+
+    public Transaction getCurrentTransaction() {
+        return currentTransaction;
+    }
+
+    public void setCurrentTransaction(Transaction currentTransaction) {
+        this.currentTransaction = currentTransaction;
+    }
+
+    public void create(Company company)
     {
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(company);
+
+        //EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        //EntityManager em = factory.createEntityManager();
+        //Session session = (Session) em;
+//
+        //session.getTransaction().begin();
+
+        //Session currentSession = sessionFactory.getCurrentSession();
+        //currentSession.saveOrUpdate(company);
+
+        //session.saveOrUpdate(company);
+//
+        //session.getTransaction().commit();
+//
+        //session.close();
+
+        getCurrentSession().save(company);
+
     }
 
     public boolean update(int compId, Company company)
@@ -35,8 +92,7 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
         company.setId(compId);
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(company);
+        getCurrentSession().saveOrUpdate(company);
 
         updated = true;
 
@@ -46,11 +102,8 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
     public Company read(int companyId){
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        Company company = getCurrentSession().get(Company.class, companyId);
 
-        Company company = (Company) currentSession.createCriteria(Company.class)
-                .add(Restrictions.idEq(companyId))
-                .uniqueResult();
         return company;
 
     }
@@ -59,15 +112,11 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
         boolean deleted = false;
 
-            Session currentSession = sessionFactory.getCurrentSession();
-
-            Company result = (Company) currentSession.createCriteria(Company.class)
-                    .add(Restrictions.idEq(companyId))
-                    .uniqueResult();
+        Company result = getCurrentSession().get(Company.class, companyId);
 
             if (result != null)
             {
-                currentSession.delete(result);
+                getCurrentSession().delete(result);
                 deleted = true;
             }
 
@@ -77,16 +126,12 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
     public void addCompanyToDeveloper(int compId, int devId){
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        Session currentSession = getCurrentSession();
 
         // get objects from id
-        Company company = (Company) currentSession.createCriteria(Company.class)
-                .add(Restrictions.idEq(compId))
-                .uniqueResult();
+        Company company = getCurrentSession().get(Company.class, compId);
 
-        Developer developer = (Developer) currentSession.createCriteria(Developer.class)
-                .add(Restrictions.idEq(devId))
-                .uniqueResult();
+        Developer developer = getCurrentSession().get(Developer.class, devId);
 
         if ((company != null)&(developer != null)){
             developer.getCompanies().add(company);
