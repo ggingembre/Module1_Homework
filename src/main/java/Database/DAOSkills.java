@@ -8,7 +8,7 @@ import Classes.Skill;
 public interface DAOSkills {
 
     void create(Skill skill);
-    boolean update (int companyId, Skill skill);
+    boolean update (int skillId, Skill skill);
     Skill read(int skillId);
     boolean delete(int skillId);
     void addSkillToDeveloper(int devId, int skillId);

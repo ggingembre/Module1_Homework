@@ -1,19 +1,65 @@
 package Classes;
 
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by guillaume on 6/6/17.
  */
+
+@Entity
+@Table(name = "developers")
 public class Developer {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private int developerId;
+
+    @Column(name = "firstName")
     private String firstName;
+
+    @Column(name = "lastName")
     private String lastName;
+
+    @Column(name = "gender")
     private String gender;
+
+    @Column(name = "address")
     private String address;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "phone")
     private String phone;
+
+    @Column(name = "jobTitle")
     private String jobTitle;
+
+    @Column(name = "salary")
     private double salary;
+
+    private Set<Skill> skills = new HashSet<Skill>(0);
+
+    // many to many relationship with skills, lets say that developers own skills:
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "developers_skills", joinColumns = {
+            @JoinColumn(name = "developer_id", nullable = false, updatable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "skill_id",
+                    nullable = false, updatable = false) })
+
+    public Set<Skill> getSkills() {
+        return this.skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
+
 
     public Developer (){}
 
@@ -115,8 +161,26 @@ public class Developer {
                 ", salary=" + salary +
                 '}';
     }
+
+    @ManyToMany(mappedBy = "developers")
+    private Collection<Company> companies;
+
+    public Collection<Company> getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(Collection<Company> companies) {
+        this.companies = companies;
+    }
+
+    @ManyToMany(mappedBy = "developers")
+    private Collection<Project> projects;
+
+    public Collection<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Collection<Project> projects) {
+        this.projects = projects;
+    }
 }
-
-
-
-

@@ -1,14 +1,49 @@
 package Classes;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by guillaume on 6/6/17.
  */
+
+@Entity
+@Table(name = "companies")
+
 public class Company {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "company_id")
     private int id;
+
+    @Column(name = "company_name")
     private String companyName;
+
+    @Column(name = "company_address")
     private String companyAddress;
+
+    @Column(name = "company_description")
     private String companyDescription;
+
+    private Set<Developer> developers = new HashSet<Developer>(0);
+
+    // a company has many developers, and a developer has many companies (if freelance), many to many
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "companies_developers", joinColumns = {
+            @JoinColumn(name = "company_id", nullable = false, updatable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "developer_id",
+                    nullable = false, updatable = false) })
+
+    public Set<Developer> getDevelopers() {
+        return this.developers;
+    }
+
+    public void setDevelopers(Set<Developer> developers) {
+        this.developers = developers;
+    }
 
     public Company (){}
 
@@ -49,6 +84,10 @@ public class Company {
     public void setCompanyDescription(String companyDescription) {
         this.companyDescription = companyDescription;
     }
+
+
+
+
 
     @Override
     public String toString() {

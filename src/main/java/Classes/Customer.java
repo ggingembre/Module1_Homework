@@ -1,15 +1,53 @@
 package Classes;
 
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by guillaume on 6/6/17.
  */
+
+
+@Entity
+@Table(name = "customers")
 public class Customer {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "customer_id")
     private int customerId;
+
+    @Column(name = "customer_name")
     private String customerName;
+
+    @Column(name = "customer_address")
     private String customerAddress;
+
+    @Column(name = "customer_phone")
     private String customerPhone;
+
+    @Column(name = "customer_description")
     private String customerDescription;
+
+    private Set<Project> projects = new HashSet<Project>(0);
+
+    // one customer may have many projects, one project may have many customers, many to many
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "customers_projects", joinColumns = {
+            @JoinColumn(name = "customer_id", nullable = false, updatable = false) },
+            inverseJoinColumns = { @JoinColumn(name = "project_id",
+                    nullable = false, updatable = false) })
+
+
+    public Set<Project> getProjects() {
+        return this.projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
+    }
 
     public Customer (){}
 

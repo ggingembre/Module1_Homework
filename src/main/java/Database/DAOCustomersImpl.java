@@ -1,154 +1,98 @@
 package Database;
 
 import Classes.Customer;
-import Classes.Utils;
 
-import java.sql.*;
+import Classes.Project;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import static Classes.Utils.getConnection;
+@Repository
+@Transactional
 
 /**
  * Created by guillaume on 6/8/17.
  */
 public class DAOCustomersImpl implements DAOCustomers {
 
-
+    @Autowired
+    SessionFactory sessionFactory;
 
     public void create(Customer customer) {
-        int dbCustId = -1;
-        Connection con = null;
-        try {
-            con = getConnection();
-            Statement statement = con.createStatement();
-            String sql = "INSERT INTO customers (customer_id, customer_name, customer_address, customer_phone, customer_description) " +
-                    "VALUES (" + customer.getCustomerId() + ", '" + customer.getCustomerName() + "', '" + customer.getCustomerAddress() +
-                    "' , '" + customer.getCustomerPhone() + "', '" + customer.getCustomerDescription() + "')";
-            statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
 
-            ResultSet rs = statement.getGeneratedKeys();
-
-            if (rs.next()) {
-                dbCustId = rs.getInt(1);
-            } else {
-
-                System.out.println("error in retrieving auto generated ID key from DB");
-            }
-
-            customer.setCustomerId(dbCustId);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (con!=null){
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
-
-
-    public boolean update(int customerId, Customer customer) {
-
-        boolean success = false;
-
-        try (Connection con = getConnection()){
-        PreparedStatement ps = con.prepareStatement("UPDATE customers set customer_name =?, " +
-                "customer_address=?, customer_phone=?, customer_description=? WHERE customer_id=?");
-
-        String name = customer.getCustomerName();
-        String address = customer.getCustomerAddress();
-        String phone = customer.getCustomerPhone();
-        String description = customer.getCustomerDescription();
-        int id = customerId;
-
-        ps.setString(1, name);
-        ps.setString(2,address);
-        ps.setString(3,description);
-        ps.setString(4, phone);
-        ps.setInt(5, id);
-        ps.execute();
-
-        success = true;
-
-    } catch (SQLException e) {
-        throw new RuntimeException(e);
-    }
-
-    return success;
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.saveOrUpdate(customer);
 
     }
 
+
+    public boolean update (int customerId, Customer customer){
+
+        boolean updated;
+
+        customer.setCustomerId(customerId);
+
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.saveOrUpdate(customer);
+
+        updated = true;
+
+        return updated;
+
+    }
 
     public Customer read(int customerId) {
-        try(Connection con = getConnection()){
 
-            Statement statement = con.createStatement();
-            String sql = "SELECT * FROM customers WHERE customer_id =" + customerId;
-            ResultSet rs = statement.executeQuery(sql);
-            Customer customer = new Customer();
+        Session currentSession = sessionFactory.getCurrentSession();
+        Customer result = (Customer) currentSession.createCriteria(Customer.class)
+                .add(Restrictions.eq("company_id", customerId))
+                .uniqueResult();
+        return result;
 
-            while (rs.next()){
-                String customerName = rs.getString("customer_name");
-                String customerAddress = rs.getString("customer_address");
-                String customerPhone = rs.getString("customer_phone");
-                String customerDescription = rs.getString("customer_description");
-
-                customer.setCustomerName(customerName);
-                customer.setCustomerAddress(customerAddress);
-                customer.setCustomerPhone(customerPhone);
-                customer.setCustomerDescription(customerDescription);
-
-            }
-
-            return customer;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
+    public boolean delete(int customerId){
 
-    public boolean delete(int customerId) {
+        boolean deleted = false;
 
-        boolean success = false;
+        Session currentSession = sessionFactory.getCurrentSession();
 
-        try (Connection con = getConnection()){
-            Statement statement = con.createStatement();
-            String sql = "DELETE FROM customers WHERE customer_id=" + customerId;
-            statement.execute(sql);
-            success = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Customer result = (Customer) currentSession.createCriteria(Customer.class)
+                .add(Restrictions.idEq(customerId))
+                .uniqueResult();
+
+        if (result != null)
+        {
+            currentSession.delete(result);
+            deleted = true;
         }
 
-        return success;
+        return deleted;
 
     }
 
     public void addProjectToCustomer(int projectId, int custId){
 
-        Connection con = null;
-        try {
-            con = getConnection();
-            Statement statement = con.createStatement();
-            String sql = "INSERT INTO customers_projects (customer_id, project_id) " +
-                    "VALUES (" + custId + ", " + projectId  + ")";
-            statement.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (con!=null){
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
 
+        Session currentSession = sessionFactory.getCurrentSession();
+
+        // get objects from id
+        Customer customer = (Customer) currentSession.createCriteria(Customer.class)
+                .add(Restrictions.idEq(custId))
+                .uniqueResult();
+
+        Project project = (Project) currentSession.createCriteria(Project.class)
+                .add(Restrictions.idEq(projectId))
+                .uniqueResult();
+
+        if ((customer != null)&(project != null)){
+            customer.getProjects().add(project);
+            project.getCustomers().add(customer);
+            System.out.println("Operation successfully completed!");
+        } else System.out.println("operation aborted, one parameter is null");
     }
 
 

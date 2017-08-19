@@ -458,8 +458,8 @@ public class Menu {
 
     private void readCompany() {
 
-        String compName = readNameFromConsole("company name");
-        System.out.println(compDAO.read(compName));
+        int compId = Integer.parseInt(readNameFromConsole("company ID"));
+        System.out.println(compDAO.read(compId));
 
     }
 

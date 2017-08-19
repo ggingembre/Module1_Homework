@@ -1,13 +1,40 @@
 package Classes;
 
+import javax.persistence.*;
+import java.util.Collection;
+
 /**
  * Created by guillaume on 6/6/17.
  */
+
+@Entity
+@Table(name = "skills")
 public class Skill {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private int skillId;
+
+    @Column(name = "skillName")
     private String skillName;
+
+    @Column(name = "skillDescription")
     private String skillDescription;
+
+    // one developer has many skills, and one skill has many developers -> many to many
+
+    @ManyToMany(mappedBy = "skills")
+    private Collection<Developer> developers;
+
+    public Collection<Developer> getDevelopers() {
+        return developers;
+    }
+
+    public void setDevelopers(Collection<Developer> developers) {
+        this.developers = developers;
+    }
+
 
     public Skill (){}
 
@@ -49,4 +76,5 @@ public class Skill {
                 ", skillDescription='" + skillDescription + '\'' +
                 '}';
     }
+
 }

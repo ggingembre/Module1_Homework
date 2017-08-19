@@ -1,185 +1,91 @@
 package Database;
 
 import Classes.Company;
-import Classes.Utils;
+import Classes.Developer;
 
-import java.sql.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import static Classes.Utils.getConnection;
-
-/**
- * Created by guillaume on 6/7/17.
- */
+ @Repository
+ @Transactional
 public class DAOCompaniesImpl implements DAOCompanies {
 
-    public void create(Company company) {
-        int dbCompId = -1;
-        Connection con = null;
-        try {
-            con = getConnection();
-            Statement statement = con.createStatement();
-            String sql = "INSERT INTO companies (company_id, company_name, company_address, company_description) " +
-                    "VALUES (" + company.getId() + ", '" + company.getCompanyName() + "', '" + company.getCompanyAddress() +
-                    "' , '" + company.getCompanyDescription() + "')";
-            statement.execute(sql, Statement.RETURN_GENERATED_KEYS); // rs = stmt.getGeneratedKeys();
+   @Autowired
+   private SessionFactory sessionFactory;
 
-            ResultSet rs = statement.getGeneratedKeys();
-
-            if (rs.next()) {
-                dbCompId = rs.getInt(1);
-            } else {
-
-                System.out.println("error in retrieving auto generated ID key from DB");
-            }
-
-            company.setId(dbCompId);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (con!=null){
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+     public void create(Company company)
+    {
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.saveOrUpdate(company);
     }
 
-    public boolean update(int companyId, Company company) {
+    public boolean update(int compId, Company company)
+    {
+         boolean updated;
 
-        boolean success = false;
+        company.setId(compId);
 
-        try (Connection con = getConnection()){
-            //Statement statement = con.createStatement();
-            PreparedStatement ps = con.prepareStatement("UPDATE companies set company_name =?, " +
-                    "company_address=?, company_description=? WHERE company_id=?");
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.saveOrUpdate(company);
 
-            String name = company.getCompanyName();
-            String address = company.getCompanyAddress();
-            String description = company.getCompanyDescription();
-            int id = companyId;
+        updated = true;
 
-            ps.setString(1, name);
-            ps.setString(2,address);
-            ps.setString(3,description);
-            ps.setInt(4, id);
-            ps.execute();
-
-            success = true;
-
-            //String sql = "UPDATE companies set company_name = '" + name + "', company_address = '" +
-            //        address + "', company_description = '" + description + "' WHERE company_id =" + companyId;
-
-            //statement.executeUpdate(sql);
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return success;
+        return updated;
 
     }
 
-    public Company read(int companyId) {
+    public Company read(int companyId){
 
-        try(Connection con = getConnection()){
-
-            Statement statement = con.createStatement();
-            String sql = "SELECT * FROM companies WHERE company_id =" + companyId;
-            ResultSet rs = statement.executeQuery(sql);
-            Company company = new Company();
-
-            while (rs.next()){
-                String companyName = rs.getString("company_name");
-                String companyAddress = rs.getString("company_address");
-                String companyDescription = rs.getString("company_description");
-
-                company.setCompanyName(companyName);
-                company.setCompanyAddress(companyAddress);
-                company.setCompanyDescription(companyDescription);
-
-            }
-
-            return company;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
+        Session currentSession = sessionFactory.getCurrentSession();
+        Company company = (Company) currentSession.createCriteria(Company.class)
+                .add(Restrictions.idEq(companyId))
+                .uniqueResult();
+        return company;
 
     }
 
-    public Company read(String companyName) {
+    public boolean delete(int companyId){
 
-        try(Connection con = getConnection()){
+        boolean deleted = false;
 
-            Statement statement = con.createStatement();
-            String sql = "SELECT * FROM companies WHERE company_name LIKE '" + companyName + "'";
-            ResultSet rs = statement.executeQuery(sql);
-            Company company = new Company();
+            Session currentSession = sessionFactory.getCurrentSession();
 
-            while (rs.next()){
-                int companyId = rs.getInt("company_id");
-                companyName = rs.getString("company_name");
-                String companyAddress = rs.getString("company_address");
-                String companyDescription = rs.getString("company_description");
+            Company result = (Company) currentSession.createCriteria(Company.class)
+                    .add(Restrictions.idEq(companyId))
+                    .uniqueResult();
 
-                company.setId(companyId);
-                company.setCompanyName(companyName);
-                company.setCompanyAddress(companyAddress);
-                company.setCompanyDescription(companyDescription);
-
+            if (result != null)
+            {
+                currentSession.delete(result);
+                deleted = true;
             }
 
-            return company;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-
-    }
-
-    public boolean delete(int companyId) {
-
-        boolean success = false;
-
-        try (Connection con = getConnection()){
-            Statement statement = con.createStatement();
-            String sql = "DELETE FROM companies WHERE company_id=" + companyId;
-            statement.execute(sql);
-            success = true;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return success;
+        return deleted;
 
     }
 
     public void addCompanyToDeveloper(int compId, int devId){
 
-        Connection con = null;
-        try {
-            con = getConnection();
-            Statement statement = con.createStatement();
-            String sql = "INSERT INTO companies_developers (developer_id, company_id) " +
-                    "VALUES (" + devId + ", " + compId  + ")";
-            statement.execute(sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (con!=null){
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+        Session currentSession = sessionFactory.getCurrentSession();
 
+        // get objects from id
+        Company company = (Company) currentSession.createCriteria(Company.class)
+                .add(Restrictions.idEq(compId))
+                .uniqueResult();
+
+        Developer developer = (Developer) currentSession.createCriteria(Developer.class)
+                .add(Restrictions.idEq(devId))
+                .uniqueResult();
+
+        if ((company != null)&(developer != null)){
+            developer.getCompanies().add(company);
+            company.getDevelopers().add(developer);
+            System.out.println("Operation successfully completed!");
+        } else System.out.println("operation aborted, one parameter is null");
     }
 
 }
