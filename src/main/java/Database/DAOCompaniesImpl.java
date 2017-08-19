@@ -5,17 +5,23 @@ import Classes.Developer;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
- @Repository
- @Transactional
+import java.util.TimeZone;
+
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Repository;
+//import org.springframework.transaction.annotation.Transactional;
+//
+// @Repository
+// @Transactional
+//
 public class DAOCompaniesImpl implements DAOCompanies {
 
-   @Autowired
+   //@Autowired
    private SessionFactory sessionFactory;
+
 
      public void create(Company company)
     {
@@ -41,6 +47,7 @@ public class DAOCompaniesImpl implements DAOCompanies {
     public Company read(int companyId){
 
         Session currentSession = sessionFactory.getCurrentSession();
+
         Company company = (Company) currentSession.createCriteria(Company.class)
                 .add(Restrictions.idEq(companyId))
                 .uniqueResult();
@@ -88,4 +95,4 @@ public class DAOCompaniesImpl implements DAOCompanies {
         } else System.out.println("operation aborted, one parameter is null");
     }
 
-}
+ }

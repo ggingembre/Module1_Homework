@@ -14,7 +14,7 @@ import java.util.Set;
 public class Developer {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private int developerId;
 
@@ -42,11 +42,10 @@ public class Developer {
     @Column(name = "salary")
     private double salary;
 
-    private Set<Skill> skills = new HashSet<Skill>(0);
-
     // many to many relationship with skills, lets say that developers own skills:
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Skill> skills = new HashSet<Skill>(0);
     @JoinTable(name = "developers_skills", joinColumns = {
             @JoinColumn(name = "developer_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "skill_id",
@@ -174,7 +173,7 @@ public class Developer {
     }
 
     @ManyToMany(mappedBy = "developers")
-    private Collection<Project> projects;
+    private Collection<Project>projects;
 
     public Collection<Project> getProjects() {
         return projects;

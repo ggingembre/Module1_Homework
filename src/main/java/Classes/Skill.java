@@ -12,7 +12,7 @@ import java.util.Collection;
 public class Skill {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "id")
     private int skillId;
 

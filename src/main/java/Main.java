@@ -1,7 +1,13 @@
 import Classes.*;
 import Database.*;
 
-import java.sql.SQLException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  * Created by guillaume on 6/6/17.
@@ -9,6 +15,16 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) {
+
+       //Configuration configuration = new Configuration();
+       //configuration.configure("hibernate.cfg.xml");
+       //SessionFactory sessionFactory = configuration.buildSessionFactory();
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+
+        //SessionFactory sessionFactory = null;
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
         DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
         DAOCustomersImpl custDAO = new DAOCustomersImpl();

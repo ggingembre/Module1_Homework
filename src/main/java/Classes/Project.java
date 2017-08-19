@@ -16,7 +16,7 @@ public class Project {
 
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "project_id")
     private int projectId;
 
@@ -26,13 +26,11 @@ public class Project {
     @Column(name = "project_description")
     private String projectDescription;
 
-    // one project may have many developers and many clients and vis versa: many to many
-
-    private Set<Developer> developers = new HashSet<Developer>(0);
-
-    // a company has many developers, and a developer has many companies (if freelance), many to many
+    // one project may have many developers and vis versa: many to many
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Developer> developers = new HashSet<Developer>(0);
+
     @JoinTable(name = "project_developers", joinColumns = {
             @JoinColumn(name = "project_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "developer_id",

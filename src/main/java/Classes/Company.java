@@ -14,7 +14,7 @@ import java.util.Set;
 public class Company {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "company_id")
     private int id;
 
@@ -27,11 +27,11 @@ public class Company {
     @Column(name = "company_description")
     private String companyDescription;
 
-    private Set<Developer> developers = new HashSet<Developer>(0);
-
     // a company has many developers, and a developer has many companies (if freelance), many to many
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Developer> developers = new HashSet<Developer>(0);
+
     @JoinTable(name = "companies_developers", joinColumns = {
             @JoinColumn(name = "company_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "developer_id",

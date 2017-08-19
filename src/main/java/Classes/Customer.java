@@ -14,7 +14,7 @@ import java.util.Set;
 public class Customer {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "customer_id")
     private int customerId;
 
@@ -30,11 +30,10 @@ public class Customer {
     @Column(name = "customer_description")
     private String customerDescription;
 
-    private Set<Project> projects = new HashSet<Project>(0);
-
     // one customer may have many projects, one project may have many customers, many to many
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Project> projects = new HashSet<Project>(0);
     @JoinTable(name = "customers_projects", joinColumns = {
             @JoinColumn(name = "customer_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "project_id",
