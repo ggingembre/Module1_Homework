@@ -9,8 +9,8 @@ SELECT
   (cost - SUM(developers.salary)) AS 'Profit'
 
 FROM projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+  INNER JOIN developers ON projects_developers.developer_id = developers.id
 
 GROUP BY projects.project_id
 ORDER BY (cost - SUM(developers.salary)) ASC LIMIT 1;
@@ -22,8 +22,8 @@ SELECT
   (cost - SUM(developers.salary)) AS 'Profit'
 
 FROM projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+  INNER JOIN developers ON projects_developers.developer_id = developers.id
   INNER JOIN companies_developers ON developers.id = companies_developers.developer_id
   INNER JOIN companies ON companies_developers.company_id = companies.company_id
 
@@ -39,8 +39,8 @@ SELECT
   (cost - SUM(developers.salary)) AS 'Profit'
 
 FROM projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+  INNER JOIN developers ON projects_developers.developer_id = developers.id
 
 GROUP BY projects.project_id
 ORDER BY 'Profit' ASC LIMIT 1;
@@ -52,8 +52,8 @@ SELECT
   (cost - SUM(developers.salary)) AS 'Profit'
 
 FROM projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+  INNER JOIN developers ON projects_developers.developer_id = developers.id
 
   WHERE cost = (select MIN(cost) from projects) -- here I want to add the developers table
 GROUP BY projects.project_id
@@ -65,8 +65,8 @@ SELECT
   (cost - SUM(developers.salary)) AS 'Profit'
 
 FROM projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+  INNER JOIN developers ON projects_developers.developer_id = developers.id
 
 WHERE (cost - SUM(developers.salary)) = (SELECT
                 project_name,
@@ -74,8 +74,8 @@ WHERE (cost - SUM(developers.salary)) = (SELECT
                 (cost - SUM(developers.salary)) AS 'Profit'
 
               FROM projects
-                INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-                INNER JOIN developers ON project_developers.developer_id = developers.id
+                INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+                INNER JOIN developers ON projects_developers.developer_id = developers.id
 
               GROUP BY projects.project_id
               ORDER BY 'Profit' ASC) -- here I want to add the developers table
@@ -90,8 +90,8 @@ SELECT
   (cost - SUM(developers.salary)) AS 'Profit'
 
 FROM projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+  INNER JOIN developers ON projects_developers.developer_id = developers.id
   INNER JOIN companies_developers ON developers.id = companies_developers.developer_id
   INNER JOIN companies ON companies_developers.company_id = companies.company_id
   INNER JOIN customers_projects ON projects.project_id = customers_projects.project_id

@@ -14,8 +14,8 @@ SELECT
   (cost - SUM(developers.salary)) AS Profit
 
 FROM projects
-  INNER JOIN project_developers ON projects.project_id = project_developers.project_id
-  INNER JOIN developers ON project_developers.developer_id = developers.id
+  INNER JOIN projects_developers ON projects.project_id = projects_developers.project_id
+  INNER JOIN developers ON projects_developers.developer_id = developers.id
   INNER JOIN companies_developers ON developers.id = companies_developers.developer_id
   INNER JOIN companies ON companies_developers.company_id = companies.company_id
   INNER JOIN customers_projects ON projects.project_id = customers_projects.project_id
@@ -42,9 +42,9 @@ FROM
   INNER JOIN
     developers ON companies_developers.developer_id = developers.id
   INNER JOIN
-    project_developers ON project_developers.developer_id = developers.id
+    projects_developers ON projects_developers.developer_id = developers.id
   INNER JOIN
-    projects ON project_developers.project_id = projects.project_id
+    projects ON projects_developers.project_id = projects.project_id
   INNER JOIN
     customers_projects ON projects.project_id = customers_projects.project_id
   INNER JOIN

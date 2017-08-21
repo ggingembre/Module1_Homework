@@ -8,8 +8,8 @@ SELECT
 FROM
   developers
   INNER JOIN
-  project_developers ON developers.id = project_developers.developer_id
+  projects_developers ON developers.id = projects_developers.developer_id
   INNER JOIN
-  projects ON project_developers.project_id = projects.project_id
+  projects ON projects_developers.project_id = projects.project_id
 GROUP BY projects.project_id
 ORDER BY sum_salary DESC;

@@ -31,7 +31,7 @@ public class Project {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Developer> developers = new HashSet<Developer>(0);
 
-    @JoinTable(name = "project_developers", joinColumns = {
+    @JoinTable(name = "projects_developers", joinColumns = {
             @JoinColumn(name = "project_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "developer_id",
                     nullable = false, updatable = false) })

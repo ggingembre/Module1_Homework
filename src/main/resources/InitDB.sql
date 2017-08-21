@@ -180,7 +180,7 @@ UNLOCK TABLES;
 -- Table structure for table `project_developers`
 --
 
-DROP TABLE IF EXISTS `project_developers`;
+DROP TABLE IF EXISTS projects_developers;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_developers` (
@@ -197,9 +197,9 @@ CREATE TABLE `project_developers` (
 -- Dumping data for table `project_developers`
 --
 
-LOCK TABLES `project_developers` WRITE;
-/*!40000 ALTER TABLE `project_developers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `project_developers` ENABLE KEYS */;
+LOCK TABLES projects_developers WRITE;
+/*!40000 ALTER TABLE projects_developers DISABLE KEYS */;
+/*!40000 ALTER TABLE projects_developers ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
