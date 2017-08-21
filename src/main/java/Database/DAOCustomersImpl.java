@@ -3,29 +3,29 @@ package Database;
 import Classes.Customer;
 
 import Classes.Project;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Repository;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//@Repository
-//@Transactional
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 
 /**
  * Created by guillaume on 6/8/17.
  */
-public class DAOCustomersImpl implements DAOCustomers {
 
-    //@Autowired
-    SessionFactory sessionFactory;
+// how to do this with sessionfactory?
+// Session currentSession = sessionFactory.getCurrentSession();
+// the code seems much cleaner with only session factory, but for some reason I could not get it to work
+
+public class DAOCustomersImpl implements DAOCustomers {
 
     public void create(Customer customer) {
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(customer);
-
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(customer);
+        em.getTransaction().commit();
     }
 
 
@@ -35,8 +35,20 @@ public class DAOCustomersImpl implements DAOCustomers {
 
         customer.setCustomerId(customerId);
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(customer);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        // get customer to update
+        Customer update = em.find(Customer.class, customerId);
+
+        update.setCustomerName(customer.getCustomerName());
+        update.setCustomerAddress(customer.getCustomerAddress());
+        update.setCustomerPhone(customer.getCustomerPhone());
+        update.setCustomerDescription(customer.getCustomerDescription());
+
+        em.getTransaction().commit();
+
 
         updated = true;
 
@@ -46,10 +58,13 @@ public class DAOCustomersImpl implements DAOCustomers {
 
     public Customer read(int customerId) {
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        Customer result = (Customer) currentSession.createCriteria(Customer.class)
-                .add(Restrictions.eq("company_id", customerId))
-                .uniqueResult();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        // get customer to update
+        Customer result = em.find(Customer.class, customerId);
+
         return result;
 
     }
@@ -58,15 +73,17 @@ public class DAOCustomersImpl implements DAOCustomers {
 
         boolean deleted = false;
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        Customer result = (Customer) currentSession.createCriteria(Customer.class)
-                .add(Restrictions.idEq(customerId))
-                .uniqueResult();
+        // get project to update
+        Customer result = em.find(Customer.class, customerId);
 
         if (result != null)
         {
-            currentSession.delete(result);
+            em.remove(result);
+            em.getTransaction().commit();
             deleted = true;
         }
 
@@ -77,20 +94,20 @@ public class DAOCustomersImpl implements DAOCustomers {
     public void addProjectToCustomer(int projectId, int custId){
 
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
         // get objects from id
-        Customer customer = (Customer) currentSession.createCriteria(Customer.class)
-                .add(Restrictions.idEq(custId))
-                .uniqueResult();
+        Project project = em.find(Project.class, projectId);
 
-        Project project = (Project) currentSession.createCriteria(Project.class)
-                .add(Restrictions.idEq(projectId))
-                .uniqueResult();
+        Customer customer = em.find(Customer.class, custId);
+
 
         if ((customer != null)&(project != null)){
             customer.getProjects().add(project);
             project.getCustomers().add(customer);
+            em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
     }

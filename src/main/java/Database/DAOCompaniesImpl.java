@@ -3,86 +3,26 @@ package Database;
 import Classes.Company;
 import Classes.Developer;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+// how to do this with sessionfactory?
+// Session currentSession = sessionFactory.getCurrentSession();
+// the code seems much cleaner with only session factory, but for some reason I could not get it to work
+
 public class DAOCompaniesImpl implements DAOCompanies {
 
-   private Session currentSession;
-   private Transaction currentTransaction;
 
-   private static SessionFactory getSessionFactory(){
-       Configuration configuration = new Configuration().configure();
-       StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-               .applySettings(configuration.getProperties());
-       SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
-       return sessionFactory;
-   }
-
-   public Session openCurrentSession (){
-        currentSession = getSessionFactory().openSession();
-
-       return currentSession;
-   }
-
-    public Session openCurrentSessionwithTransaction() {
-        currentSession = getSessionFactory().openSession();
-        currentTransaction = currentSession.beginTransaction();
-        return currentSession;
-    }
-
-    public void closeCurrentSession() {
-        currentSession.close();
-    }
-
-    public void closeCurrentSessionwithTransaction() {
-        currentTransaction.commit();
-        currentSession.close();
-    }
-
-    public Session getCurrentSession() {
-        return currentSession;
-    }
-
-    public void setCurrentSession(Session currentSession) {
-        this.currentSession = currentSession;
-    }
-
-    public Transaction getCurrentTransaction() {
-        return currentTransaction;
-    }
-
-    public void setCurrentTransaction(Transaction currentTransaction) {
-        this.currentTransaction = currentTransaction;
-    }
 
     public void create(Company company)
     {
-
-        //EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
-        //EntityManager em = factory.createEntityManager();
-        //Session session = (Session) em;
-//
-        //session.getTransaction().begin();
-
-        //Session currentSession = sessionFactory.getCurrentSession();
-        //currentSession.saveOrUpdate(company);
-
-        //session.saveOrUpdate(company);
-//
-        //session.getTransaction().commit();
-//
-        //session.close();
-
-        getCurrentSession().save(company);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(company);
+        em.getTransaction().commit();
 
     }
 
@@ -90,9 +30,18 @@ public class DAOCompaniesImpl implements DAOCompanies {
     {
          boolean updated;
 
-        company.setId(compId);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        getCurrentSession().saveOrUpdate(company);
+        // get developer to update
+        Company updateDev = em.find(Company.class, compId);
+
+        updateDev.setCompanyName(company.getCompanyName());
+        updateDev.setCompanyDescription(company.getCompanyDescription());
+        updateDev.setCompanyAddress(company.getCompanyDescription());
+
+        em.getTransaction().commit();
 
         updated = true;
 
@@ -102,9 +51,14 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
     public Company read(int companyId){
 
-        Company company = getCurrentSession().get(Company.class, companyId);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        return company;
+        // get customer to update
+        Company result = em.find(Company.class, companyId);
+
+        return result;
 
     }
 
@@ -112,13 +66,19 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
         boolean deleted = false;
 
-        Company result = getCurrentSession().get(Company.class, companyId);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-            if (result != null)
-            {
-                getCurrentSession().delete(result);
-                deleted = true;
-            }
+        // get project to update
+        Company result = em.find(Company.class, companyId);
+
+        if (result != null)
+        {
+            em.remove(result);
+            em.getTransaction().commit();
+            deleted = true;
+        }
 
         return deleted;
 
@@ -126,16 +86,19 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
     public void addCompanyToDeveloper(int compId, int devId){
 
-        Session currentSession = getCurrentSession();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
         // get objects from id
-        Company company = getCurrentSession().get(Company.class, compId);
+        Company company = em.find(Company.class, compId);
 
-        Developer developer = getCurrentSession().get(Developer.class, devId);
+        Developer developer = em.find(Developer.class, devId);
 
         if ((company != null)&(developer != null)){
             developer.getCompanies().add(company);
             company.getDevelopers().add(developer);
+            em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
     }

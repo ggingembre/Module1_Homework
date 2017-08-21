@@ -2,29 +2,28 @@ package Database;
 
 import Classes.Developer;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Repository;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//@Repository
-//@Transactional
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Created by guillaume on 6/8/17.
  */
+
+// how to do this with sessionfactory?
+// Session currentSession = sessionFactory.getCurrentSession();
+// the code seems much cleaner with only session factory, but for some reason I could not get it to work
+    
 public class DAODevelopersImpl implements DAODevelopers {
 
-    //@Autowired
-    SessionFactory sessionFactory;
 
     public void create(Developer developer){
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(developer);
-
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(developer);
+        em.getTransaction().commit();
     }
 
 
@@ -32,10 +31,23 @@ public class DAODevelopersImpl implements DAODevelopers {
 
         boolean updated;
 
-        developer.setDeveloperId(developerId);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(developer);
+        // get developer to update
+        Developer updateDev = em.find(Developer.class, developerId);
+
+        updateDev.setFirstName(developer.getFirstName());
+        updateDev.setSalary(developer.getSalary());
+        updateDev.setJobTitle(developer.getJobTitle());
+        updateDev.setEmail(developer.getEmail());
+        updateDev.setAddress(developer.getAddress());
+        updateDev.setGender(developer.getGender());
+        updateDev.setLastName(developer.getLastName());
+        updateDev.setPhone(developer.getPhone());
+
+        em.getTransaction().commit();
 
         updated = true;
 
@@ -46,10 +58,13 @@ public class DAODevelopersImpl implements DAODevelopers {
 
     public Developer read(int developerId){
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        Developer result = (Developer) currentSession.createCriteria(Developer.class)
-                .add(Restrictions.eq("company_id", developerId))
-                .uniqueResult();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        // get developer to update
+        Developer result = em.find(Developer.class, developerId);
+
         return result;
     }
 
@@ -58,15 +73,17 @@ public class DAODevelopersImpl implements DAODevelopers {
 
         boolean deleted = false;
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        Developer result = (Developer) currentSession.createCriteria(Developer.class)
-                .add(Restrictions.idEq(developerId))
-                .uniqueResult();
+        // get developer to update
+        Developer result = em.find(Developer.class, developerId);
 
         if (result != null)
         {
-            currentSession.delete(result);
+            em.remove(result);
+            em.getTransaction().commit();
             deleted = true;
         }
 

@@ -6,28 +6,29 @@ import Classes.Project;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Repository;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//@Repository
-//@Transactional
 
-
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Created by guillaume on 6/8/17.
  */
 
+// how to do this with sessionfactory?
+// Session currentSession = sessionFactory.getCurrentSession();
+// the code seems much cleaner with only session factory, but for some reason I could not get it to work
+
 public class DAOProjectsImpl implements DAOProjects {
 
-    //@Autowired
-    SessionFactory sessionFactory;
 
     public void create(Project project){
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(project);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(project);
+        em.getTransaction().commit();
 
     }
 
@@ -36,10 +37,17 @@ public class DAOProjectsImpl implements DAOProjects {
 
         boolean updated;
 
-        project.setProjectId(projectId);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(project);
+        // get developer to update
+        Project update = em.find(Project.class, projectId);
+
+        update.setProjectDescription(project.getProjectDescription());
+        update.setProjectName(project.getProjectName());
+
+        em.getTransaction().commit();
 
         updated = true;
 
@@ -50,10 +58,12 @@ public class DAOProjectsImpl implements DAOProjects {
 
     public Project read(int projectId){
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        Project result = (Project) currentSession.createCriteria(Project.class)
-                .add(Restrictions.eq("company_id", projectId))
-                .uniqueResult();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        // get developer to update
+        Project result = em.find(Project.class, projectId);
         return result;
 
     }
@@ -63,15 +73,19 @@ public class DAOProjectsImpl implements DAOProjects {
 
         boolean deleted = false;
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        // Session currentSession = sessionFactory.getCurrentSession();
 
-        Project result = (Project) currentSession.createCriteria(Project.class)
-                .add(Restrictions.idEq(projectId))
-                .uniqueResult();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        // get project to update
+        Project result = em.find(Project.class, projectId);
 
         if (result != null)
         {
-            currentSession.delete(result);
+            em.remove(result);
+            em.getTransaction().commit();
             deleted = true;
         }
 
@@ -82,21 +96,19 @@ public class DAOProjectsImpl implements DAOProjects {
 
     public void addProjectToDeveloper(int projectId, int devId){
 
-
-        Session currentSession = sessionFactory.getCurrentSession();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
         // get objects from id
-        Project project = (Project) currentSession.createCriteria(Project.class)
-                .add(Restrictions.idEq(projectId))
-                .uniqueResult();
+        Project project = em.find(Project.class, projectId);
 
-        Developer developer = (Developer) currentSession.createCriteria(Developer.class)
-                .add(Restrictions.idEq(devId))
-                .uniqueResult();
+        Developer developer = em.find(Developer.class, devId);
 
         if ((project != null)&(developer != null)){
             project.getDevelopers().add(developer);
             developer.getProjects().add(project);
+            em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
     }

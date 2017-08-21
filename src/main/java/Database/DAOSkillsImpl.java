@@ -6,6 +6,10 @@ import Classes.Skill;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Repository;
 //import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +20,11 @@ import org.hibernate.criterion.Restrictions;
 /**
  * Created by guillaume on 6/8/17.
  */
+
+// how to do this with sessionfactory?
+// Session currentSession = sessionFactory.getCurrentSession();
+// the code seems much cleaner with only session factory, but for some reason I could not get it to work
+
 public class DAOSkillsImpl implements DAOSkills {
 
     //@Autowired
@@ -23,8 +32,11 @@ public class DAOSkillsImpl implements DAOSkills {
 
     public void create(Skill skill){
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(skill);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(skill);
+        em.getTransaction().commit();
 
     }
 
@@ -33,10 +45,17 @@ public class DAOSkillsImpl implements DAOSkills {
 
         boolean updated;
 
-        skill.setSkillId(skillId);
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        currentSession.saveOrUpdate(skill);
+        // get developer to update
+        Skill update = em.find(Skill.class, skillId);
+
+        update.setSkillDescription(skill.getSkillDescription());
+        update.setSkillName(skill.getSkillName());
+
+        em.getTransaction().commit();
 
         updated = true;
 
@@ -47,10 +66,12 @@ public class DAOSkillsImpl implements DAOSkills {
 
     public Skill read(int skillId){
 
-        Session currentSession = sessionFactory.getCurrentSession();
-        Skill result = (Skill) currentSession.createCriteria(Skill.class)
-                .add(Restrictions.eq("company_id", skillId))
-                .uniqueResult();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+
+        // get developer to update
+        Skill result = em.find(Skill.class, skillId);
 
         return result;
 
@@ -61,15 +82,17 @@ public class DAOSkillsImpl implements DAOSkills {
 
         boolean deleted = false;
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
-        Skill result = (Skill) currentSession.createCriteria(Skill.class)
-                .add(Restrictions.idEq(skillId))
-                .uniqueResult();
+        // get skill to update
+        Skill result = em.find(Skill.class, skillId);
 
         if (result != null)
         {
-            currentSession.delete(result);
+            em.remove(result);
+            em.getTransaction().commit();
             deleted = true;
         }
 
@@ -80,20 +103,19 @@ public class DAOSkillsImpl implements DAOSkills {
 
     public void addSkillToDeveloper(int devId, int skillId){
 
-        Session currentSession = sessionFactory.getCurrentSession();
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
 
         // get objects from id
-        Skill skill = (Skill) currentSession.createCriteria(Skill.class)
-                .add(Restrictions.idEq(skillId))
-                .uniqueResult();
+        Skill skill = em.find(Skill.class, skillId);
 
-        Developer developer = (Developer) currentSession.createCriteria(Developer.class)
-                .add(Restrictions.idEq(devId))
-                .uniqueResult();
+        Developer developer = em.find(Developer.class, devId);
 
         if ((skill != null)&(developer != null)){
             skill.getDevelopers().add(developer);
             developer.getSkills().add(skill);
+            em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
     }

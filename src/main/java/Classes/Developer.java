@@ -14,7 +14,7 @@ import java.util.Set;
 public class Developer {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int developerId;
 
