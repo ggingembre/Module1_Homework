@@ -218,6 +218,7 @@ public class Menu {
             case 29:
                 exit = true;
                 System.out.println("Thank you for using our application");
+                //System.exit(0); // I added this because, for some reason, with hibernate, the menu stopped working
         }
     }
 
