@@ -64,6 +64,7 @@ public class DAOProjectsImpl implements DAOProjects {
 
         // get developer to update
         Project result = em.find(Project.class, projectId);
+
         return result;
 
     }

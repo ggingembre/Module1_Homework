@@ -1,7 +1,6 @@
 import Classes.*;
 import Database.*;
 import Exceptions.OutOfMenuRangeException;
-import Service.CompanyService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,8 +19,6 @@ public class Menu {
     private DAODevelopersImpl devDAO = new DAODevelopersImpl();
     private DAOProjectsImpl proDAO = new DAOProjectsImpl();
     private DAOSkillsImpl skDAO = new DAOSkillsImpl();
-
-    private CompanyService compServ = new CompanyService();
 
     public Menu(DAOCompaniesImpl compDAO, DAOCustomersImpl custDAO, DAODevelopersImpl devDAO,
                 DAOProjectsImpl proDAO, DAOSkillsImpl skDAO) {
@@ -235,7 +232,6 @@ public class Menu {
         String compDesc = readNameFromConsole("company description");
 
         Company newCo = new Company(compName, compAddress, compDesc);
-        compServ.create(newCo);
 
         System.out.println("You have created the following company:");
         System.out.println("CompanyID: "+ newCo.getId());

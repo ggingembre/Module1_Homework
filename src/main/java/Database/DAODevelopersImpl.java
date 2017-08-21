@@ -13,7 +13,7 @@ import javax.persistence.Persistence;
 // how to do this with sessionfactory?
 // Session currentSession = sessionFactory.getCurrentSession();
 // the code seems much cleaner with only session factory, but for some reason I could not get it to work
-    
+
 public class DAODevelopersImpl implements DAODevelopers {
 
 
