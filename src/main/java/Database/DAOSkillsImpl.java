@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.logging.Level;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Repository;
 //import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +33,16 @@ public class DAOSkillsImpl implements DAOSkills {
 
     public void create(Skill skill){
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(skill);
         em.getTransaction().commit();
+
+        em.close();
+        factory.close();
 
     }
 
@@ -44,6 +50,8 @@ public class DAOSkillsImpl implements DAOSkills {
     public boolean update (int skillId, Skill skill){
 
         boolean updated;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -59,6 +67,9 @@ public class DAOSkillsImpl implements DAOSkills {
 
         updated = true;
 
+        em.close();
+        factory.close();
+
         return updated;
 
     }
@@ -66,12 +77,17 @@ public class DAOSkillsImpl implements DAOSkills {
 
     public Skill read(int skillId){
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
 
         // get developer to update
         Skill result = em.find(Skill.class, skillId);
+
+        em.close();
+        factory.close();
 
         return result;
 
@@ -81,6 +97,8 @@ public class DAOSkillsImpl implements DAOSkills {
     public boolean delete(int skillId){
 
         boolean deleted = false;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -96,12 +114,17 @@ public class DAOSkillsImpl implements DAOSkills {
             deleted = true;
         }
 
+        em.close();
+        factory.close();
+
         return deleted;
 
     }
 
 
     public void addSkillToDeveloper(int devId, int skillId){
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -118,6 +141,10 @@ public class DAOSkillsImpl implements DAOSkills {
             em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
+
+        em.close();
+        factory.close();
+
     }
 
 }

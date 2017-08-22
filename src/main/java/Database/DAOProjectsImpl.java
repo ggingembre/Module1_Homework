@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.logging.Level;
 
 /**
  * Created by guillaume on 6/8/17.
@@ -24,18 +25,24 @@ public class DAOProjectsImpl implements DAOProjects {
 
     public void create(Project project){
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(project);
         em.getTransaction().commit();
 
+        em.close();
+        factory.close();
+
     }
 
     public boolean update (int projectId, Project project){
 
-
         boolean updated;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -51,6 +58,9 @@ public class DAOProjectsImpl implements DAOProjects {
 
         updated = true;
 
+        em.close();
+        factory.close();
+
         return updated;
 
     }
@@ -58,12 +68,17 @@ public class DAOProjectsImpl implements DAOProjects {
 
     public Project read(int projectId){
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
 
         // get developer to update
         Project result = em.find(Project.class, projectId);
+
+        em.close();
+        factory.close();
 
         return result;
 
@@ -75,6 +90,8 @@ public class DAOProjectsImpl implements DAOProjects {
         boolean deleted = false;
 
         // Session currentSession = sessionFactory.getCurrentSession();
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -90,12 +107,17 @@ public class DAOProjectsImpl implements DAOProjects {
             deleted = true;
         }
 
+        em.close();
+        factory.close();
+
         return deleted;
 
     }
 
 
     public void addProjectToDeveloper(int projectId, int devId){
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -112,6 +134,9 @@ public class DAOProjectsImpl implements DAOProjects {
             em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
+
+        em.close();
+        factory.close();
     }
 
 }

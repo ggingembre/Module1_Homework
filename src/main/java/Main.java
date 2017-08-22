@@ -1,5 +1,10 @@
 
+import Classes.*;
 import Database.*;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import java.util.logging.Level;
 
 
 /**
@@ -19,16 +24,19 @@ public class Main {
        //EntityManager em = factory.createEntityManager();
        //em.getTransaction().begin();
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
+
         DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
         DAOCustomersImpl custDAO = new DAOCustomersImpl();
         DAODevelopersImpl devDAO = new DAODevelopersImpl();
-        DAOProjectsImpl proDAO = new DAOProjectsImpl();
+        DAOProjectsImpl prDAO = new DAOProjectsImpl();
         DAOSkillsImpl skDAO = new DAOSkillsImpl();
 
 
-        Menu menu = new Menu(compDAO, custDAO, devDAO, proDAO, skDAO);
+        //Menu menu = new Menu(compDAO, custDAO, devDAO, proDAO, skDAO);
 
-        menu.runMenu();
+        //menu.runMenu();
 
       /*System.out.println("Check if database exists, if not create it");
 
@@ -42,6 +50,8 @@ public class Main {
            }
        }
 
+       */
+
         System.out.println("create company objects");
 
         Company ibm = new Company("IBM", "Palo Alto, USA", "International Business Machines, servers and clouds services");
@@ -50,7 +60,7 @@ public class Main {
         Company vk = new Company ("VK", "Moscow, Russia", "Russian social media");
 
         System.out.println("save objects to DB");
-        DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
+        //DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
         compDAO.create(ibm);
         compDAO.create(facebook);
         compDAO.create(webdev);
@@ -71,7 +81,7 @@ public class Main {
         Customer osmoun = new Customer("Osmoun", "Tashkent, Uzbekistan", "+3000000", "Uzbek tour operator");
 
         System.out.println("save them to DB");
-        DAOCustomersImpl custDAO = new DAOCustomersImpl();
+        //DAOCustomersImpl custDAO = new DAOCustomersImpl();
         custDAO.create(claude);
         custDAO.create(jf);
         custDAO.create(osmoun);
@@ -102,7 +112,7 @@ public class Main {
 
 
         System.out.println("saving them to DB");
-        DAODevelopersImpl devDAO = new DAODevelopersImpl();
+        //DAODevelopersImpl devDAO = new DAODevelopersImpl();
         devDAO.create(guillaume);
         devDAO.create(elena);
         devDAO.create(charles);
@@ -125,7 +135,7 @@ public class Main {
         Skill jav = new Skill ("jav","error test");
 
         System.out.println("save skills to DB");
-        DAOSkillsImpl skDAO = new DAOSkillsImpl();
+        //DAOSkillsImpl skDAO = new DAOSkillsImpl();
         skDAO.create(java);
         skDAO.create(web);
         skDAO.create(python);
@@ -145,7 +155,7 @@ public class Main {
         Project sitesdev = new Project("sites dev", "dev dev dev");
 
         System.out.println("save to DB");
-        DAOProjectsImpl prDAO = new DAOProjectsImpl();
+        //DAOProjectsImpl prDAO = new DAOProjectsImpl();
         prDAO.create(paysystem);
         prDAO.create(sitedev);
         prDAO.create(tool);
@@ -195,6 +205,8 @@ public class Main {
 
         System.out.println("adding projects to clients");
         // add projects to clients
+        System.out.println(paysystem.getProjectId());
+        System.out.println(framb.getCustomerId());
         custDAO.addProjectToCustomer(paysystem.getProjectId(),framb.getCustomerId());
         custDAO.addProjectToCustomer(sitedev.getProjectId(),osmoun.getCustomerId());
         custDAO.addProjectToCustomer(tool.getProjectId(),claude.getCustomerId());
@@ -244,6 +256,8 @@ public class Main {
          skDAO.delete(14);
          skDAO.delete(15);
          skDAO.delete(16);*/
+
+
 
     }
 }

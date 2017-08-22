@@ -7,6 +7,7 @@ import Classes.Developer;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.logging.Level;
 
 // how to do this with sessionfactory?
 // Session currentSession = sessionFactory.getCurrentSession();
@@ -18,17 +19,25 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
     public void create(Company company)
     {
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(company);
         em.getTransaction().commit();
 
+        em.close();
+        factory.close();
+
     }
 
     public boolean update(int compId, Company company)
     {
          boolean updated;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -43,6 +52,9 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
         em.getTransaction().commit();
 
+        em.close();
+        factory.close();
+
         updated = true;
 
         return updated;
@@ -51,12 +63,17 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
     public Company read(int companyId){
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
 
         // get customer to update
         Company result = em.find(Company.class, companyId);
+
+        em.close();
+        factory.close();
 
         return result;
 
@@ -65,6 +82,8 @@ public class DAOCompaniesImpl implements DAOCompanies {
     public boolean delete(int companyId){
 
         boolean deleted = false;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -80,12 +99,16 @@ public class DAOCompaniesImpl implements DAOCompanies {
             deleted = true;
         }
 
+        em.close();
+        factory.close();
+
         return deleted;
 
     }
 
     public void addCompanyToDeveloper(int compId, int devId){
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
@@ -101,6 +124,10 @@ public class DAOCompaniesImpl implements DAOCompanies {
             em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
+
+        em.close();
+        factory.close();
+
     }
 
  }

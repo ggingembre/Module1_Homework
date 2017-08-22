@@ -7,6 +7,7 @@ import Classes.Project;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.logging.Level;
 
 
 /**
@@ -21,11 +22,16 @@ public class DAOCustomersImpl implements DAOCustomers {
 
     public void create(Customer customer) {
 
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(customer);
         em.getTransaction().commit();
+        em.close();
+        factory.close();
     }
 
 
@@ -33,7 +39,7 @@ public class DAOCustomersImpl implements DAOCustomers {
 
         boolean updated;
 
-        customer.setCustomerId(customerId);
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -49,6 +55,8 @@ public class DAOCustomersImpl implements DAOCustomers {
 
         em.getTransaction().commit();
 
+        em.close();
+        factory.close();
 
         updated = true;
 
@@ -58,12 +66,17 @@ public class DAOCustomersImpl implements DAOCustomers {
 
     public Customer read(int customerId) {
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
 
         // get customer to update
         Customer result = em.find(Customer.class, customerId);
+
+        em.close();
+        factory.close();
 
         return result;
 
@@ -72,6 +85,8 @@ public class DAOCustomersImpl implements DAOCustomers {
     public boolean delete(int customerId){
 
         boolean deleted = false;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -87,12 +102,16 @@ public class DAOCustomersImpl implements DAOCustomers {
             deleted = true;
         }
 
+        em.close();
+        factory.close();
+
         return deleted;
 
     }
 
     public void addProjectToCustomer(int projectId, int custId){
 
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
         EntityManager em = factory.createEntityManager();
@@ -110,7 +129,10 @@ public class DAOCustomersImpl implements DAOCustomers {
             em.getTransaction().commit();
             System.out.println("Operation successfully completed!");
         } else System.out.println("operation aborted, one parameter is null");
-    }
 
+        em.close();
+        factory.close();
+
+    }
 
 }
