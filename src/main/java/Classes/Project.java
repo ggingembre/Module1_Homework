@@ -11,9 +11,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "projects")
-
+@NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p")
 public class Project {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

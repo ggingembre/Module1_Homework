@@ -9,6 +9,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "skills")
+@NamedQuery(name = "Skill.findAll", query = "SELECT s FROM Skill s")
 public class Skill {
 
     @Id

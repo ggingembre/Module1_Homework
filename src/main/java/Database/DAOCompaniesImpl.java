@@ -7,6 +7,8 @@ import Classes.Developer;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.logging.Level;
 
 // how to do this with sessionfactory?
@@ -77,6 +79,26 @@ public class DAOCompaniesImpl implements DAOCompanies {
 
         return result;
 
+    }
+
+    public List<Company> readAll(){
+
+        List<Company> all;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        TypedQuery<Company> typedQuery = em.createNamedQuery("Company.findAll", Company.class);
+
+        all = typedQuery.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        factory.close();
+
+        return all;
     }
 
     public boolean delete(int companyId){

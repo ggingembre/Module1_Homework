@@ -11,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "customers")
+@NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c")
 public class Customer {
 
     @Id

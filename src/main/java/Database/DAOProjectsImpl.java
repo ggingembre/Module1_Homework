@@ -10,6 +10,8 @@ import org.hibernate.criterion.Restrictions;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -82,6 +84,26 @@ public class DAOProjectsImpl implements DAOProjects {
 
         return result;
 
+    }
+
+    public List<Project> readAll(){
+
+        List<Project> all;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        TypedQuery<Project> typedQuery = em.createNamedQuery("Project.findAll", Project.class);
+
+        all = typedQuery.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        factory.close();
+
+        return all;
     }
 
 

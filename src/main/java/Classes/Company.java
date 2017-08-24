@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "companies")
-
+@NamedQuery(name = "Company.findAll", query = "SELECT c FROM Customer c")
 public class Company {
 
     @Id

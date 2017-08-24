@@ -7,6 +7,8 @@ import Classes.Project;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.logging.Level;
 
 
@@ -81,6 +83,27 @@ public class DAOCustomersImpl implements DAOCustomers {
         return result;
 
     }
+
+    public List<Customer> readAll(){
+
+        List<Customer> all;
+
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.WARNING);
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        TypedQuery<Customer> typedQuery = em.createNamedQuery("Customer.findAll", Customer.class);
+
+        all = typedQuery.getResultList();
+
+        em.getTransaction().commit();
+        em.close();
+        factory.close();
+
+        return all;
+    }
+
 
     public boolean delete(int customerId){
 

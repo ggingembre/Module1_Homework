@@ -4,6 +4,7 @@ import Database.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.List;
 import java.util.logging.Level;
 
 
@@ -223,6 +224,15 @@ public class Main {
         Skill english = new Skill("English", "fluent in English");
         skDAO.create(english);
         System.out.println(english.getSkillId() + ", " + english.getSkillName());
+
+
+        System.out.println("Printing all projects");
+
+        List<Project> projects = prDAO.readAll();
+
+        for(Project p : projects){
+            System.out.println(p);
+        }
 
        /*DAOCompaniesImpl compDAO = new DAOCompaniesImpl();
        DAODevelopersImpl devDAO = new DAODevelopersImpl();
